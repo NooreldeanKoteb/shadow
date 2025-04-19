@@ -1,0 +1,135 @@
+{
+  "projectName": "MedShadow",
+  "description": "A responsive web platform connecting students with medical shadowing, rotation, and volunteering opportunities",
+  "DesignDocs": "/reference",
+  "techStack": {
+    "frontend": {
+      "framework": "React with Next.js",
+      "styling": "Tailwind CSS",
+      "stateManagement": "React Context API and/or Redux Toolkit",
+      "maps": "Google Maps API or Mapbox"
+    },
+    "backend": {
+      "framework": "Node.js with Express",
+      "database": "MongoDB",
+      "orm": "Mongoose",
+      "authentication": "NextAuth.js"
+    },
+    "deployment": {
+      "hosting": "Vercel or Netlify",
+      "database": "MongoDB Atlas",
+      "storage": "AWS S3 or Firebase Storage"
+    }
+  },
+  "features": [
+    {
+      "name": "User Profiles",
+      "description": "Dual profile types: Student profiles and Medical Facility profiles",
+      "components": [
+        "Registration and login system",
+        "Profile creation and editing",
+        "Portfolio section for students (education, skills, interests)",
+        "Facility information for medical providers (location, specialties, contact)"
+      ]
+    },
+    {
+      "name": "Opportunity Listings",
+      "description": "Medical facilities can post shadowing and volunteering opportunities",
+      "components": [
+        "Creation form with rich details",
+        "Opportunity types (shadowing, rotation, volunteering, paid internship)",
+        "Specialty categorization",
+        "Duration and schedule details",
+        "Requirements specification",
+        "Application process details"
+      ]
+    },
+    {
+      "name": "Search and Discovery",
+      "description": "Students can search and filter opportunities",
+      "components": [
+        "Location-based search with radius filter",
+        "Map view of nearby opportunities",
+        "Filters for specialty, type, duration, paid/unpaid",
+        "Saved searches and alerts",
+        "Recommended opportunities based on profile"
+      ]
+    },
+    {
+      "name": "Application System",
+      "description": "Students can apply to opportunities directly through the platform",
+      "components": [
+        "In-app application submission",
+        "Document uploads (resume, cover letter)",
+        "Application tracking",
+        "Messaging system between applicants and facilities",
+        "Status updates and notifications"
+      ]
+    },
+    {
+      "name": "Review and Rating",
+      "description": "Review system for both students and facilities",
+      "components": [
+        "Rating and review submission",
+        "Verification of participation",
+        "Report inappropriate reviews",
+        "Highlight helpful reviews"
+      ]
+    },
+    {
+      "name": "Responsive Design",
+      "description": "Website works seamlessly across all device sizes",
+      "components": [
+        "Mobile-first approach",
+        "Adaptive layouts",
+        "Touch-friendly interface",
+        "Optimized loading for mobile connections"
+      ]
+    }
+  ],
+  "codePatterns": {
+    "frontend": [
+      "Component-based architecture",
+      "Custom hooks for shared logic",
+      "Server-side rendering where appropriate",
+      "Static generation for non-dynamic pages",
+      "Incremental Static Regeneration for semi-dynamic content",
+      "Design Guide: /reference/design-guide.md"
+    ],
+    "backend": [
+      "RESTful API design",
+      "Model-View-Controller pattern",
+      "Middleware for authentication and validation",
+      "Comprehensive error handling",
+      "Rate limiting for security",
+      "Database guide: /reference/database-schema.js",
+      "API endpoints guide: /reference/api-endpoints.js"
+    ],
+    "security": [
+      "Input validation and sanitization",
+      "CSRF protection",
+      "XSS prevention",
+      "Rate limiting",
+      "Secure authentication workflows"
+    ]
+  },
+  "folderStructure": {
+    "frontend": [
+      "/components - Reusable UI components",
+      "/pages - Next.js pages and routing",
+      "/hooks - Custom React hooks",
+      "/context - React context providers",
+      "/styles - Global styles and Tailwind configuration",
+      "/public - Static assets",
+      "/utils - Utility functions"
+    ],
+    "backend": [
+      "/controllers - Request handlers",
+      "/models - Database models",
+      "/routes - API route definitions",
+      "/middleware - Express middleware",
+      "/config - Configuration files",
+      "/utils - Utility functions"
+    ]
+  }
+}
