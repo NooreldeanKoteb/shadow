@@ -1,0 +1,71 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# User Types and Roles Guide
+
+## User Roles
+The application supports two distinct user roles defined in [user.ts](mdc:src/types/user.ts):
+
+1. STUDENT
+   - For medical students seeking opportunities
+   - Includes education details
+   - Can save and apply to opportunities
+   - Has skills and interests fields
+
+2. FACILITY
+   - For medical facilities offering opportunities
+   - Includes location and contact information
+   - Can post and manage opportunities
+   - Has specialties and facility type fields
+
+## User Schema
+The Mongoose schema in [User.ts](mdc:src/models/User.ts) implements:
+
+### Base Fields
+- name (required)
+- email (required, unique)
+- password (required, hashed)
+- role (required, enum of UserRole)
+- timestamps (createdAt, updatedAt)
+
+### Student-specific Fields
+```typescript
+education: {
+  school: string
+  major: string
+  graduationYear: number
+  gpa: number
+}
+skills: string[]
+interests: string[]
+```
+
+### Facility-specific Fields
+```typescript
+facilityInfo: {
+  type: 'hospital' | 'clinic' | 'private practice' | 'other'
+  specialties: string[]
+  location: {
+    address: string
+    city: string
+    state: string
+    zipCode: string
+    coordinates: {
+      lat: number
+      lng: number
+    }
+  }
+  contact: {
+    phone: string
+    website: string
+  }
+}
+```
+
+## Type Safety
+- Always use the UserRole enum for role assignments
+- Validate role-specific fields based on user type
+- Use TypeScript interfaces for type checking
+- Handle optional fields appropriately

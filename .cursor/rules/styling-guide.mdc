@@ -1,0 +1,59 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Styling Guide
+
+## CSS Classes
+
+### Form Elements
+- `form-input`: Base class for input fields
+  ```css
+  .form-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
+  }
+  ```
+
+### Buttons
+- `btn-primary`: Primary action buttons
+  ```css
+  .btn-primary {
+    @apply w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50;
+  }
+  ```
+
+- `btn-secondary`: Secondary action buttons
+  ```css
+  .btn-secondary {
+    @apply w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500;
+  }
+  ```
+
+### Status Messages
+- Success messages:
+  ```css
+  .bg-secondary.bg-opacity-10.border.border-secondary.text-secondary
+  ```
+
+- Error messages:
+  ```css
+  .bg-accent.bg-opacity-10.border.border-accent.text-accent
+  ```
+
+## Color Scheme
+- Primary: Indigo (`#4F46E5`)
+- Secondary: Custom blue for links and secondary actions
+- Accent: Used for errors and warnings
+- Neutral: Grays for text and borders
+
+## Typography
+- Font sizes: Use Tailwind's size scale (sm, base, lg, etc.)
+- Font weights: medium for labels, normal for text
+- Line heights: Default for text, tight for headings
+
+## Spacing
+- Use Tailwind's spacing scale
+- Consistent form spacing with `space-y-4`
+- Padding: `px-4 py-3` for alert boxes
+- Margins: `mt-1` for input spacing, `mt-4` for sections

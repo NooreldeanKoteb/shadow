@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M32 4L4 32L32 60L60 32L32 4Z" stroke="#4F46E5" stroke-width="4"/>
+  <path d="M32 4V60" stroke="#4F46E5" stroke-width="4"/>
+  <path d="M4 32H60" stroke="#4F46E5" stroke-width="4"/>
+</svg> 
