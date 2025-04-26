@@ -1,0 +1,34 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# MedShadow Design Guidelines
+
+## Color Palette
+- Primary Navy: `#14213D`, `#1A365D` - Used for backgrounds, buttons, and text
+- Gold Accent: `#FCA311` - Used for highlights, accents, and CTAs
+- Neutral Grays: `#4B5563`, `#F8FAFC` - Used for text and backgrounds
+
+## UI Components
+
+### Cards
+Cards use a consistent style with:
+- Light background (`#F8FAFC`)
+- Subtle border (`border-neutral-200`)
+- Top accent bar (`bg-gradient-to-r from-[#FCA311] to-[#FCA311]/60`)
+- Hover effects (`group-hover:shadow-md group-hover:border-[#FCA311]/30`)
+
+### Buttons
+- Primary: Gold background with white text
+- Secondary: Transparent with border
+
+### Typography
+- Headings: Navy blue (`#14213D`), bold
+- Body text: Dark gray (`#4B5563`)
+- Link text: Gold (`#FCA311`)
+
+## Section Layout
+- Hero section: Gradient background with overlay image
+- Feature sections: White/light gray alternating backgrounds
+- Text-heavy sections: Centered content with max-width constraints

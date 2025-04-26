@@ -1,0 +1,22 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# MedShadow Project Structure
+
+## Overview
+MedShadow is a platform connecting students with medical shadowing opportunities. The codebase follows Next.js app router structure.
+
+## Key Directories
+- `src/app`: Contains the page routes using Next.js App Router
+- `src/components`: Reusable UI components
+- `src/styles`: Global styles and Tailwind configuration
+- `src/models`: Database models
+- `src/lib`: Utility functions
+- `src/context`: React context providers
+
+## Key Files
+- [medshadow/src/app/page.tsx](mdc:medshadow/src/app/page.tsx): Homepage with hero section, partner institutions, and feature cards
+- [medshadow/tailwind.config.js](mdc:medshadow/tailwind.config.js): Tailwind configuration including custom colors and spacing
+- [styles/design-system.css](mdc:styles/design-system.css): Design system variables and component styles
