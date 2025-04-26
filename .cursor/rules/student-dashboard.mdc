@@ -1,0 +1,55 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Student Dashboard Page & Dropdown Filters
+
+The main student dashboard UI is implemented in [medshadow/src/app/dashboard/student/page.tsx](mdc:medshadow/src/app/dashboard/student/page.tsx). It features:
+
+- A fixed header with navigation and a user avatar dropdown menu (profile/sign out)
+- A sticky search/filter bar directly below the header, with `overflow-visible` and `rounded-lg` to prevent dropdown clipping
+- Filter controls for Type, Specialty, Location, and Duration, each using the [DropdownFilter](mdc:medshadow/src/components/DropdownFilter.tsx) component
+- The sidebar and main content area are flex containers, with the sidebar containing stats, sorting, and a scrollable opportunity list
+
+## DropdownFilter Component
+- All dropdowns use [DropdownFilter.tsx](mdc:medshadow/src/components/DropdownFilter.tsx)
+- Dropdowns are accessible, close on outside click, and use a checkmark icon for selection
+- The 'Clear' button is at the top right of the dropdown
+- For 'Specialty' and 'Location', the dropdown is wider (`w-72`), uses a larger font, and includes a search bar to filter options in real time
+- Selected options are highlighted with a background and bold text
+
+## CSS/UX Notes
+- The sticky search bar uses `overflow-visible` to ensure dropdowns are never clipped
+- No parent container uses `overflow-hidden` or similar, so dropdowns are always fully visible
+- The UI is responsive and mobile-friendly
+
+Refer to these files for any changes to dashboard layout, dropdown UX, or filter logic.
+
+## Required APIs
+- User profile fetch: `GET /api/user/profile` (for user info/avatar)
+- Applications list: `GET /api/applications` (for sidebar stats)
+- Saved opportunities: `GET /api/opportunities/saved` (for sidebar stats)
+- Opportunities list: `GET /api/opportunities` (for main/filterable list)
+- (Future) Opportunity apply: `POST /api/applications` (for Apply Now button)
+- (Future) Opportunity save/unsave: `POST /api/opportunities/saved` (for Save button)
+- (Future) Opportunity filters: `GET /api/opportunities?type=...&specialty=...` (for search/filter)
+- (Future) User sign out: (NextAuth or custom endpoint)
+
+See [API endpoints guide](mdc:reference/api-endpoints.js) and [database schema](mdc:reference/database-schema.js) for details.
+
+## TODO: Buttons & Features
+- [ ] User dropdown: Implement sign out logic
+- [ ] User dropdown: Implement Edit Profile navigation
+- [ ] Search bar: Implement search/filter API integration
+- [ ] Filter dropdowns: Integrate with backend filters
+- [ ] Sidebar stats: Fetch real application/saved counts
+- [ ] Sidebar sort: Implement sort by distance/date
+- [ ] Opportunity list: Fetch from API, not mock data
+- [ ] Apply Now button: Implement application submission
+- [ ] Save button: Implement save/unsave logic
+- [ ] Responsive/mobile menu: Ensure all dropdowns work on mobile
+- [ ] Add loading/error states for all async actions
+- [ ] Add notifications for actions (apply, save, etc.)
+
+Update this list as features are implemented or new endpoints are added.

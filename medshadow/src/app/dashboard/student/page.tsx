@@ -6,6 +6,12 @@ import MainLayout from '@/components/layout/MainLayout';
 import Link from 'next/link';
 import Image from 'next/image';
 import DropdownFilter from '@/components/DropdownFilter';
+import MainContent from '@/components/dashboard/MainContent';
+import OpportunityDetails from '@/components/dashboard/OpportunityDetails';
+import Sidebar from '@/components/dashboard/Sidebar';
+import OpportunityList from '@/components/dashboard/OpportunityList';
+import StatsQuickActions from '@/components/dashboard/StatsQuickActions';
+import SortDropdown from '@/components/dashboard/SortDropdown';
 
 interface User {
   _id: string;
@@ -643,156 +649,19 @@ export default function StudentDashboard() {
       </div>
       {/* Main Content: Sidebar + Main Area */}
       <main className="flex-1 flex flex-col md:flex-row pt-8">
-        
-        {/* Sidebar (filters + list) */}
-        <aside className={`w-full md:w-1/3 lg:w-1/4 bg-transparent border-r-2 border-blue-100 md:sticky md:top-16 z-20 transition-all duration-200 shadow-none ${showSidebar ? 'block' : 'hidden md:block'}`}>
-          {/* Collapsible Stats/Quick Actions */}
-          <div className="md:hidden flex justify-between items-center px-4 py-2 border-b border-blue-100 bg-blue-50">
-            <span className="font-semibold text-[#14213D]">Stats & Quick Actions</span>
-            <button onClick={() => setShowStats(!showStats)} className="text-[#FCA311] font-bold text-lg">{showStats ? '−' : '+'}</button>
-          </div>
-          <div className={`px-4 py-2 space-y-4 ${showStats ? 'block' : 'hidden'} md:block`}> {/* Always show on desktop */}
-            {/* Stats/Quick Actions here (collapsed by default on mobile) */}
-            <div className="grid grid-cols-2 gap-2 text-xs mb-2">
-              <Link href="/applications" className="bg-white border rounded p-2 text-center shadow-sm hover:bg-blue-50 transition-colors cursor-pointer block">
-                <div className="font-bold text-[#FCA311]">4</div>
-                <div>Applied</div>
-              </Link>
-              <Link href="/opportunities/saved" className="bg-white border rounded p-2 text-center shadow-sm hover:bg-blue-50 transition-colors cursor-pointer block">
-                <div className="font-bold text-[#14213D]">2</div>
-                <div>Saved</div>
-              </Link>
-            </div>
-          </div>
-          {/* Result count */}
-          <div className="flex items-center justify-between px-4 py-2">
-            <div className="text-xs text-gray-500 font-medium">{sortedOpportunities.length} opportunities found</div>
-            <div className="relative">
-              <button onClick={() => setSortDropdownOpen((o) => !o)} className="p-2 rounded hover:bg-blue-100 transition-colors" aria-label="Sort">
-                <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 6h18M6 12h12M9 18h6" /></svg>
-              </button>
-              {sortDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] p-2">
-                  <button className={`block w-full text-left px-3 py-2 rounded hover:bg-blue-50 ${sortOption === 'distance' ? 'bg-blue-100 font-semibold' : ''}`} onClick={() => { setSortOption('distance'); setSortDropdownOpen(false); }}>Sort by Distance</button>
-                  <button className={`block w-full text-left px-3 py-2 rounded hover:bg-blue-50 ${sortOption === 'date' ? 'bg-blue-100 font-semibold' : ''}`} onClick={() => { setSortOption('date'); setSortDropdownOpen(false); }}>Sort by Date Posted</button>
-                </div>
-              )}
-            </div>
-          </div>
-          {/* Opportunity List */}
-          <div className="overflow-y-auto h-[60vh] px-2 pb-4">
-            {sortedOpportunities.length === 0 ? (
-              <div className="p-4 text-gray-400 text-center">No opportunities found.</div>
-            ) : (
-              <ul className="space-y-3">
-                {sortedOpportunities.map((opp) => (
-                  <li key={opp._id}>
-                    <button
-                      className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl shadow border border-blue-100 bg-white hover:bg-[#FCA311]/10 transition-colors relative ${selectedOpportunity?._id === opp._id ? 'bg-[#FCA311]/20 border-l-4 border-[#FCA311] shadow-md' : ''}`}
-                      onClick={() => setSelectedOpportunity(opp)}
-                    >
-                      {/* Facility logo or initials */}
-                      <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-[#FCA311] flex items-center justify-center bg-white text-[#FCA311] font-bold text-lg mr-2">
-                        {opp.facilityLogo ? (
-                          <Image src={opp.facilityLogo} alt={opp.facility} fill className="object-cover rounded-full" />
-                        ) : (
-                          <span>{getInitials(opp.facility)}</span>
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="font-semibold text-[#14213D] truncate">{opp.title}</span>
-                          {opp.isNew && <span className="ml-1 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">New</span>}
-                          {opp.isPopular && <span className="ml-1 px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-xs font-semibold">Popular</span>}
-                          {opp.deadlineSoon && <span className="ml-1 px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">Deadline Soon</span>}
-                        </div>
-                        <div className="flex flex-wrap gap-1 mt-1 mb-1">
-                          <span className="bg-[#FCA311]/10 text-[#FCA311] px-2 py-0.5 rounded text-xs font-medium">{opp.type}</span>
-                          <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded text-xs font-medium">{opp.specialty}</span>
-                          <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded text-xs font-medium">{opp.duration}</span>
-                    </div>
-                        <div className="text-xs text-gray-500 truncate">{opp.location} • Posted {opp.postedAt}</div>
-                    </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </aside>
+        <Sidebar
+          applicationsCount={applications.length}
+          savedCount={savedOpportunities.length}
+          sortOption={sortOption}
+          setSortOption={setSortOption}
+          sortedOpportunities={sortedOpportunities}
+          selectedOpportunity={selectedOpportunity}
+          setSelectedOpportunity={setSelectedOpportunity}
+          sortDropdownOpen={sortDropdownOpen}
+          setSortDropdownOpen={setSortDropdownOpen}
+        />
 
-        {/* Main Content Area */}
-        <section className="flex-1 bg-transparent min-h-[60vh] p-0 md:p-4 flex flex-col">
-          {!selectedOpportunity ? (
-            <div className="flex flex-col items-center justify-center h-full text-center text-gray-400">
-              <Image src="/images/search-icon.svg" alt="Select an opportunity" width={64} height={64} className="mb-4" />
-              <h2 className="text-xl font-semibold mb-2">Select an opportunity to view details</h2>
-              <p className="text-gray-500">Browse the list on the left and click an opportunity to see more information.</p>
-            </div>
-          ) : (
-            <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-6 w-full h-full flex flex-col relative">
-              {/* Title and badges */}
-              <div className="flex flex-col md:flex-row md:items-start mb-6 gap-4">
-                <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-md flex items-center justify-center bg-white text-[#FCA311] font-bold text-2xl">
-                  {selectedOpportunity.facilityLogo ? (
-                    <Image src={selectedOpportunity.facilityLogo} alt={selectedOpportunity.facility} fill className="object-cover rounded-full" />
-                  ) : (
-                    <span>{getInitials(selectedOpportunity.facility)}</span>
-                  )}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h2 className="text-2xl font-bold text-[#14213D] mb-1 truncate">{selectedOpportunity.title}</h2>
-                  <div className="text-gray-600 mb-1 truncate">{selectedOpportunity.facility} • {selectedOpportunity.location}</div>
-                  <div className="flex flex-wrap gap-2 text-xs mb-2">
-                    <span className="bg-[#FCA311]/10 text-[#FCA311] px-2 py-1 rounded">{selectedOpportunity.type}</span>
-                    <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs font-medium">{selectedOpportunity.specialty}</span>
-                    <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">{selectedOpportunity.duration}</span>
-                    {selectedOpportunity.isNew && <span className="ml-1 px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-xs font-semibold">New</span>}
-                    {selectedOpportunity.isFeatured && <span className="ml-1 px-2 py-0.5 rounded-full bg-[#FCA311]/20 text-[#FCA311] text-xs font-semibold">Featured</span>}
-                  </div>
-                  {/* Action buttons at the top with more spacing and divider */}
-                  <div className="flex gap-3 mt-14 mb-8 flex-wrap">
-                    <button className="bg-[#FCA311] hover:bg-[#FCA311]/90 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow flex-1">Apply Now</button>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow flex-1 flex items-center justify-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 5v14l7-7 7 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2z" /></svg>
-                      Save
-                    </button>
-                  </div>
-                  <div className="border-b border-gray-200 mb-6"></div>
-                </div>
-              </div>
-              {/* Sectioned details */}
-              <div className="mb-6 border-b border-gray-100 pb-4">
-                <h3 className="font-semibold text-[#14213D] mb-1">Description</h3>
-                <p className="text-gray-700 whitespace-pre-line">{selectedOpportunity.description || 'No description provided.'}</p>
-              </div>
-              <div className="mb-6 border-b border-gray-100 pb-4">
-                <h3 className="font-semibold text-[#14213D] mb-1">Requirements</h3>
-                {selectedOpportunity.requirements && selectedOpportunity.requirements.length > 0 ? (
-                  <ul className="list-disc list-inside text-gray-700">
-                    {selectedOpportunity.requirements.map((req, idx) => (
-                      <li key={idx}>{req}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-500">No requirements listed.</p>
-                )}
-              </div>
-              <div className="mb-6">
-                <h3 className="font-semibold text-[#14213D] mb-1">Benefits</h3>
-                {selectedOpportunity.benefits && selectedOpportunity.benefits.length > 0 ? (
-                  <ul className="list-disc list-inside text-gray-700">
-                    {selectedOpportunity.benefits.map((ben, idx) => (
-                      <li key={idx}>{ben}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-gray-500">No benefits listed.</p>
-                )}
-              </div>
-            </div>
-          )}
-        </section>
+        <MainContent selectedOpportunity={selectedOpportunity} />
       </main>
       
       </div>
