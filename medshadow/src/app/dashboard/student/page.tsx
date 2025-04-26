@@ -591,9 +591,10 @@ export default function StudentDashboard() {
           <span className="font-bold text-lg text-[#14213D] tracking-tight">MedShadow</span>
         </div>
         <nav className="hidden md:flex space-x-6">
-          <Link href="/dashboard/student" className="text-[#14213D] hover:text-[#FCA311] font-medium">Dashboard</Link>
-          <Link href="/opportunities" className="text-[#14213D] hover:text-[#FCA311] font-medium">Opportunities</Link>
           <Link href="/applications" className="text-[#14213D] hover:text-[#FCA311] font-medium">Applications</Link>
+          <Link href="/opportunities" className="text-[#14213D] hover:text-[#FCA311] font-medium">Deadlines</Link>
+          <Link href="/profiles/student/me" className="text-[#14213D] hover:text-[#FCA311] font-medium">Profile</Link>
+          <Link href="/resources" className="text-[#14213D] hover:text-[#FCA311] font-medium">Resources</Link>
         </nav>
         <div className="flex items-center space-x-3 relative z-[99999]" ref={userDropdownRef}>
           <button className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-sm focus:outline-none mr-4" onClick={() => setUserDropdownOpen((o) => !o)} aria-label="User menu">
@@ -601,6 +602,7 @@ export default function StudentDashboard() {
           </button>
           {userDropdownOpen && (
             <div className="absolute right-0 top-full mt-2 min-w-[10rem] bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] p-2">
+              <Link href="/profiles/student/me" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">My Profile</Link>
               <Link href="/profiles/student/edit" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">Edit Profile</Link>
               <button className="block w-full text-left px-3 py-2 rounded text-red-600 hover:underline hover:bg-red-50" onClick={() => {/* sign out logic here */}}>Sign Out</button>
             </div>

@@ -1,0 +1,75 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Navigation and Layout Structure
+
+## Header Navigation
+The main navigation is implemented in the dashboard header with the following structure:
+
+```jsx
+<header className="fixed top-0 left-0 right-0 z-[99999]">
+  {/* Logo */}
+  {/* Navigation Links */}
+  {/* User Menu Dropdown */}
+</header>
+```
+
+### User Menu Dropdown
+- Triggered by clicking user avatar
+- Contains "Edit Profile" and "Sign Out" options
+- Uses z-index layering to appear above other elements
+- Closes when clicking outside
+
+## Layout Components
+
+### Search/Filter Bar
+- Sticky positioning below header
+- Contains search input and filter dropdowns
+- Responsive design for mobile/desktop
+- Filter categories: Type, Specialty, Location, Duration
+
+### Main Content Layout
+The main content area uses a two-column layout:
+
+```jsx
+<main className="flex-1 flex flex-col md:flex-row">
+  <Sidebar /> {/* 1/4 width on desktop */}
+  <MainContent /> {/* 3/4 width on desktop */}
+</main>
+```
+
+### Sidebar Features
+- Collapsible on mobile
+- Sticky positioning on desktop
+- Contains:
+  - Stats/Quick Actions
+  - Opportunity List
+  - Sort Controls
+
+### Z-Index Hierarchy
+```css
+Header: z-[99999]
+User Dropdown: z-[99999]
+Search Bar: z-[99998]
+Sort Dropdown: z-[9999]
+Sidebar: z-20
+```
+
+## Responsive Breakpoints
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
+
+## Component Visibility
+- Navigation links: Hidden on mobile, visible on desktop
+- Sidebar: Collapsible on mobile, fixed on desktop
+- Search/Filter: Stacks vertically on mobile, horizontal on desktop
+
+## Recent Updates
+1. Fixed dropdown menu positioning
+2. Improved z-index layering
+3. Enhanced mobile responsiveness
+4. Added proper spacing and padding
+5. Implemented sticky positioning for key elements

@@ -1,0 +1,116 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Data and State Management
+
+## Data Structures
+
+### User Interface
+```typescript
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  profileImage?: string;
+}
+```
+
+### Opportunity Interface
+```typescript
+interface Opportunity {
+  _id: string;
+  title: string;
+  facility: string;
+  facilityLogo?: string;
+  specialty: string;
+  location: string;
+  type: string;
+  duration: string;
+  image?: string;
+  savedAt?: string;
+  description?: string;
+  requirements?: string[];
+  benefits?: string[];
+  isNew?: boolean;
+  isFeatured?: boolean;
+  isPopular?: boolean;
+  deadlineSoon?: boolean;
+  postedAt?: string;
+}
+```
+
+### Application Interface
+```typescript
+interface Application {
+  _id: string;
+  opportunity: Opportunity;
+  status: 'pending' | 'accepted' | 'rejected';
+  createdAt: string;
+}
+```
+
+## State Management
+
+### Authentication State
+- Stored in localStorage as JWT token
+- Decoded for user role verification
+- Redirects to signin if invalid/missing
+
+### Filter State
+```typescript
+const [searchQuery, setSearchQuery] = useState('');
+const [filterType, setFilterType] = useState<string[]>([]);
+const [filterSpecialty, setFilterSpecialty] = useState<string[]>([]);
+const [filterLocation, setFilterLocation] = useState<string[]>([]);
+const [filterDuration, setFilterDuration] = useState<string[]>([]);
+const [filterDistance, setFilterDistance] = useState<number>(50);
+const [filterDateRange, setFilterDateRange] = useState<{start: string, end: string}>({start: '', end: ''});
+```
+
+### UI State
+```typescript
+const [selectedOpportunity, setSelectedOpportunity] = useState<Opportunity | null>(null);
+const [showSidebar, setShowSidebar] = useState(false);
+const [showStats, setShowStats] = useState(false);
+const [sortOption, setSortOption] = useState<'distance' | 'date' | ''>('');
+const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+```
+
+## API Integration
+
+### Endpoints
+- `/api/user/profile`: Fetch user details
+- `/api/applications`: Fetch user's applications
+- `/api/opportunities/saved`: Fetch saved opportunities
+
+### Error Handling
+- Graceful error handling with try/catch
+- Loading states during API calls
+- Fallback UI for error states
+
+## Data Flow
+
+### Initialization
+1. Check authentication token
+2. Fetch user profile
+3. Load applications and saved opportunities
+4. Initialize filter state
+
+### Filter Pipeline
+1. Start with all opportunities
+2. Apply text search filter
+3. Apply type/specialty/location filters
+4. Apply distance filter (if location available)
+5. Apply date range filter
+6. Sort results based on selected option
+
+## Recent Changes
+1. Added TypeScript interfaces for all data structures
+2. Implemented comprehensive filter system
+3. Added sorting functionality
+4. Enhanced error handling
+5. Improved state management organization
