@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Profile Pages Structure and APIs
+
+## Pages Overview
+- Public Profile: [profiles/student/[id]/page.tsx](mdc:medshadow/src/app/profiles/student/[id]/page.tsx)
+- Edit Profile: [profiles/student/edit/page.tsx](mdc:medshadow/src/app/profiles/student/edit/page.tsx)
+
+## Key Features
+- Profile image upload with hover overlay and camera icon
+- Public/private profile views using 'me' as ID for personal profile
+- Consistent navbar with user dropdown across pages
+
+## Required APIs
+1. `/api/user/profile`
+   - GET: Fetch current user's profile
+   - PUT: Update user profile
+   - Required fields: name, email, role, profileImage
+
+2. `/api/user/profile/[id]`
+   - GET: Fetch specific user's profile by ID
+   - Special case: ID='me' returns current user's profile
+   - Required fields: same as above, plus public/private data handling
+
+3. `/api/user/profile/image`
+   - POST: Upload new profile image
+   - Required: Image file validation and processing
+   - Returns: URL of uploaded image
+
+## Implementation Notes
+- Profile images should be stored in cloud storage (AWS S3/Firebase)
+- User authentication required for edit profile and image upload
+- Public profiles should have limited data visibility
+- Consistent error handling across all endpoints

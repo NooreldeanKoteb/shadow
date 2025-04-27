@@ -592,7 +592,7 @@ export default function StudentDashboard() {
         </div>
         <nav className="hidden md:flex space-x-6">
           <Link href="/applications" className="text-[#14213D] hover:text-[#FCA311] font-medium">Applications</Link>
-          <Link href="/opportunities" className="text-[#14213D] hover:text-[#FCA311] font-medium">Deadlines</Link>
+          <Link href="/deadlines" className="text-[#14213D] hover:text-[#FCA311] font-medium">Deadlines</Link>
           <Link href="/profiles/student/me" className="text-[#14213D] hover:text-[#FCA311] font-medium">Profile</Link>
           <Link href="/resources" className="text-[#14213D] hover:text-[#FCA311] font-medium">Resources</Link>
         </nav>

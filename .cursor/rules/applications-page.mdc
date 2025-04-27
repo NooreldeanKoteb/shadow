@@ -1,0 +1,84 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Applications Page Structure and APIs
+
+## Page Overview
+Main application tracking page: [applications/page.tsx](mdc:medshadow/src/app/applications/page.tsx)
+
+## Key Components
+1. Application Status Tracking
+   - Status badges (pending, reviewing, accepted, rejected, onboarding)
+   - Timeline view of application progress
+   - Color-coded status indicators
+
+2. Next Steps Section
+   - Checklist of required documents/tasks
+   - Due dates and completion tracking
+   - Document upload functionality
+
+3. Notifications/Updates
+   - Color-coded by type (info, success, warning, error)
+   - Chronological timeline
+   - Read/unread status tracking
+
+## Required APIs
+
+1. `/api/applications`
+   - GET: List all applications for current user
+   - Query params: status, page, limit
+   - Returns: Paginated list of applications with related opportunity data
+
+2. `/api/applications/[id]`
+   - GET: Fetch specific application details
+   - PUT: Update application status
+   - Required fields: status, nextSteps, notifications
+
+3. `/api/applications/[id]/documents`
+   - POST: Upload required documents
+   - GET: List uploaded documents
+   - Required: Document validation and storage
+
+4. `/api/applications/[id]/tasks`
+   - PUT: Update task completion status
+   - Required fields: taskId, completed, completionDate
+
+5. `/api/applications/notifications`
+   - GET: Fetch all notifications
+   - PUT: Mark notifications as read
+   - Query params: read, type, page, limit
+
+## Data Models
+
+```typescript
+interface Application {
+  _id: string;
+  opportunity: Opportunity;
+  status: 'pending' | 'reviewing' | 'accepted' | 'rejected' | 'onboarding';
+  createdAt: string;
+  updatedAt: string;
+  nextSteps?: {
+    type: 'document' | 'form' | 'task' | 'meeting';
+    title: string;
+    description: string;
+    deadline?: string;
+    completed?: boolean;
+  }[];
+  notifications?: {
+    _id: string;
+    message: string;
+    date: string;
+    read: boolean;
+    type: 'info' | 'success' | 'warning' | 'error';
+  }[];
+}
+```
+
+## Implementation Notes
+- Real-time updates using WebSocket for status changes
+- Document storage in cloud storage (AWS S3/Firebase)
+- Notification system should support email notifications
+- All API endpoints require authentication
+- Rate limiting for document uploads and API calls

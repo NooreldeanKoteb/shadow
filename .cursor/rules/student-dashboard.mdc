@@ -31,7 +31,7 @@ Refer to these files for any changes to dashboard layout, dropdown UX, or filter
 - Applications list: `GET /api/applications` (for sidebar stats)
 - Saved opportunities: `GET /api/opportunities/saved` (for sidebar stats)
 - Opportunities list: `GET /api/opportunities` (for main/filterable list)
-- (Future) Opportunity apply: `POST /api/applications` (for Apply Now button)
+- (Future) Opportunity apply: `POST /api/applications` (for Apply button)
 - (Future) Opportunity save/unsave: `POST /api/opportunities/saved` (for Save button)
 - (Future) Opportunity filters: `GET /api/opportunities?type=...&specialty=...` (for search/filter)
 - (Future) User sign out: (NextAuth or custom endpoint)
@@ -46,7 +46,7 @@ See [API endpoints guide](mdc:reference/api-endpoints.js) and [database schema](
 - [ ] Sidebar stats: Fetch real application/saved counts
 - [ ] Sidebar sort: Implement sort by distance/date
 - [ ] Opportunity list: Fetch from API, not mock data
-- [ ] Apply Now button: Implement application submission
+- [ ] Apply button: Implement application submission
 - [ ] Save button: Implement save/unsave logic
 - [ ] Responsive/mobile menu: Ensure all dropdowns work on mobile
 - [ ] Add loading/error states for all async actions

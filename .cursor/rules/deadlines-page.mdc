@@ -1,0 +1,43 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Deadlines Page (Calendar & List) - Cursor Rule
+
+## Summary of Recent Changes
+- **Modal Improvements:**
+  - Modal now syncs with `initialData` for editing.
+  - Modal width and button layout improved for responsiveness.
+- **Card & Button Layout:**
+  - Action buttons (check, notes, edit) are always bottom-right, spaced, and never overlap content.
+  - Type/category info and action buttons are separated with max vertical spacing.
+- **Check Mark Logic:**
+  - Card greys out when completed, but check mark remains vibrant.
+- **Notes:**
+  - Notes tooltip appears top-left of the button.
+  - Notes popup Cancel button matches the Add Item modal style.
+- **Calendar/List Synchronization:**
+  - Clicking a list item sets the calendar date (month/week/day) to the item's date, respecting the current view.
+  - Clicking a calendar event scrolls to and highlights the corresponding list item.
+  - Highlighted list item is visually marked.
+
+## APIs Needed
+- **Deadlines CRUD:**
+  - `GET /api/deadlines` - Fetch all deadlines for the user
+  - `POST /api/deadlines` - Create a new deadline
+  - `PUT /api/deadlines/:id` - Update a deadline
+  - `DELETE /api/deadlines/:id` - Delete a deadline
+- **Notes:**
+  - `PATCH /api/deadlines/:id/notes` - Update notes for a deadline
+- **Google Calendar Sync:**
+  - `GET /api/google-calendar/auth` - Get Google Calendar auth URL
+  - `POST /api/google-calendar/sync` - Sync deadlines with Google Calendar
+
+## Future Notes
+- Consider accessibility for keyboard navigation and screen readers (focus management, ARIA roles for modals/tooltips).
+- If deadlines list grows large, consider virtualization for performance.
+- Highlighting logic is currently in-memory; if multi-user or multi-tab sync is needed, persist highlightedId in state or URL.
+- If more actions are added to cards, revisit button layout for mobile responsiveness.
+- For recurring deadlines, ensure backend supports recurrence rules and correct expansion.
+- See [page.tsx](mdc:medshadow/src/app/deadlines/page.tsx) for main implementation.
