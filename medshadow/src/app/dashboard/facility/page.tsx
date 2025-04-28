@@ -1,4 +1,5 @@
-"use client";
+'use client';
+export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -12,12 +13,37 @@ interface User {
   role: string;
 }
 
+interface Opportunity {
+  _id: string;
+  title: string;
+  facility: string;
+  facilityLogo?: string;
+  specialty: string;
+  location: string;
+  type: string;
+  duration: string;
+  applicationsCount?: number;
+  createdAt?: string;
+}
+
+interface Application {
+  _id: string;
+  status: string;
+  student: {
+    name: string;
+  };
+  opportunity: {
+    title: string;
+  };
+  createdAt: string;
+}
+
 export default function FacilityDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [opportunities, setOpportunities] = useState([]);
-  const [applications, setApplications] = useState([]);
+  const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
+  const [applications, setApplications] = useState<Application[]>([]);
 
   useEffect(() => {
     // Check if user is logged in
@@ -161,14 +187,14 @@ export default function FacilityDashboard() {
             <h2 className="text-xl font-semibold mb-4 text-neutral-darker">Active Opportunities</h2>
             {opportunities.length > 0 ? (
               <ul className="space-y-3">
-                {opportunities.slice(0, 3).map((opp: any) => (
+                {opportunities.slice(0, 3).map((opp: Opportunity) => (
                   <li key={opp._id} className="border-b border-neutral-lighter pb-2">
                     <div className="font-medium text-neutral-darker">{opp.title}</div>
                     <div className="text-sm text-neutral-dark">
                       {opp.type} • {opp.applicationsCount || 0} applications
                     </div>
                     <div className="text-xs text-neutral-dark">
-                      Posted: {new Date(opp.createdAt).toLocaleDateString()}
+                      Posted: {opp.createdAt ? new Date(opp.createdAt).toLocaleDateString() : 'N/A'}
                     </div>
                   </li>
                 ))}
@@ -189,14 +215,14 @@ export default function FacilityDashboard() {
             <h2 className="text-xl font-semibold mb-4 text-neutral-darker">Recent Applications</h2>
             {applications.length > 0 ? (
               <ul className="space-y-3">
-                {applications.slice(0, 3).map((app: any) => (
+                {applications.slice(0, 3).map((app: Application) => (
                   <li key={app._id} className="border-b border-neutral-lighter pb-2">
-                    <div className="font-medium text-neutral-darker">{app.student.name}</div>
+                    <div className="font-medium text-neutral-darker">{app.student.name || 'N/A'}</div>
                     <div className="text-sm text-neutral-dark">
-                      {app.opportunity.title}
+                      {app.opportunity.title || 'N/A'}
                     </div>
                     <div className="text-xs text-neutral-dark">
-                      Applied: {new Date(app.createdAt).toLocaleDateString()}
+                      Applied: {app.createdAt ? new Date(app.createdAt).toLocaleDateString() : 'N/A'}
                     </div>
                   </li>
                 ))}
@@ -229,7 +255,7 @@ export default function FacilityDashboard() {
               <div className="text-sm text-accent font-medium">Acceptance Rate</div>
               <div className="text-2xl font-bold text-neutral-darker">
                 {applications.length > 0 
-                  ? `${Math.round((applications.filter((app: any) => app.status === 'accepted').length / applications.length) * 100)}%` 
+                  ? `${Math.round((applications.filter((app: Application) => app.status === 'accepted').length / applications.length) * 100)}%` 
                   : '0%'}
               </div>
             </div>

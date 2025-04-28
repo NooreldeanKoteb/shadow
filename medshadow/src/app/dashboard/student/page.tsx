@@ -1,4 +1,5 @@
-"use client";
+'use client';
+export const dynamic = "force-dynamic";
 
 import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -21,7 +22,7 @@ interface User {
   profileImage?: string;
 }
 
-interface Opportunity {
+export interface Opportunity {
   _id: string;
   title: string;
   facility: string;

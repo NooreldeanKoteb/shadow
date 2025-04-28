@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
+import type { Deadline } from '@/app/deadlines/page';
 
 interface DeadlineModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (deadline: any) => void;
-  initialData?: any;
+  onSave: (deadline: Deadline) => void;
+  initialData?: Deadline;
   onDelete?: () => void;
 }
 
@@ -94,7 +95,22 @@ export default function DeadlineModal({ isOpen, onClose, onSave, initialData, on
       end: new Date(form.end),
       requirements: form.requirements.split(',').map((r: string) => r.trim()).filter(Boolean),
     };
-    await onSave(deadline);
+    await onSave({
+      id: initialData?.id || Date.now().toString(),
+      title: deadline.title,
+      start: deadline.start,
+      end: deadline.end,
+      type: deadline.type,
+      category: deadline.category,
+      priority: deadline.priority,
+      description: deadline.description,
+      location: deadline.location,
+      requirements: deadline.requirements,
+      recurring: deadline.recurring,
+      customDays: deadline.customDays,
+      completed: false,
+      notes: '',
+    });
     setSaving(false);
   };
 

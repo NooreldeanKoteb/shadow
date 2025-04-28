@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import type { Opportunity } from '@/app/dashboard/student/page';
 
-function getInitials(name) {
+function getInitials(name: string) {
   return name
     .split(' ')
     .map((w) => w[0])
@@ -9,7 +10,14 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-export default function OpportunityListItem({ opportunity, selected, onClick }) {
+// If you have a type/interface for Opportunity, use it instead of 'any'
+interface OpportunityListItemProps {
+  opportunity: Opportunity;
+  selected: boolean;
+  onClick: () => void;
+}
+
+export default function OpportunityListItem({ opportunity, selected, onClick }: OpportunityListItemProps) {
   return (
     <li>
       <button

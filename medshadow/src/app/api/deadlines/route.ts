@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import mongoose from 'mongoose';
 import { z } from 'zod';
+import type { Deadline } from '@/app/deadlines/page';
 
 // Validation schema for deadline
 const deadlineSchema = z.object({
@@ -28,7 +29,7 @@ export async function GET(req: Request) {
     const endDate = searchParams.get('endDate');
 
     // TODO: Replace with actual database query
-    const deadlines = []; // Query from MongoDB
+    const deadlines: Deadline[] = []; // Query from MongoDB
 
     return NextResponse.json(deadlines);
   } catch (error) {

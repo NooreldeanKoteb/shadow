@@ -1,7 +1,13 @@
 import OpportunityDetails from './OpportunityDetails';
 import Image from 'next/image';
+import type { Opportunity } from '@/app/dashboard/student/page';
 
-export default function MainContent({ selectedOpportunity }) {
+// If you have a type/interface for Opportunity, import and use it here instead of 'any'
+interface MainContentProps {
+  selectedOpportunity: Opportunity | null;
+}
+
+export default function MainContent({ selectedOpportunity }: MainContentProps) {
   return (
     <section className="flex-1 bg-transparent min-h-[60vh] p-0 md:p-4 flex flex-col">
       {!selectedOpportunity ? (

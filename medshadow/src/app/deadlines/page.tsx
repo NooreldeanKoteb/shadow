@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = "force-dynamic";
 
 import { useState, useEffect, useRef, createRef } from 'react';
 import { Calendar, momentLocalizer, View } from 'react-big-calendar';
@@ -9,12 +10,12 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Event as RBCEvent } from 'react-big-calendar';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import DeadlineModal from '@/components/DeadlineModal';
 
 const localizer = momentLocalizer(moment);
 
-interface Deadline {
+export interface Deadline {
   id: string;
   title: string;
   start: Date;
@@ -227,8 +228,15 @@ const priorityDotColors: Record<string, string> = {
   low: '#22C55E',     // green-500
 };
 
-// Custom toolbar for react-big-calendar
-function CalendarToolbar({ label, onNavigate, onView, views, view }: any) {
+interface CalendarToolbarProps {
+  label: string;
+  onNavigate: (action: string) => void;
+  onView: (view: string) => void;
+  views: string[];
+  view: string;
+}
+
+function CalendarToolbar({ label, onNavigate, onView, views, view }: CalendarToolbarProps) {
   return (
     <div className="flex items-center justify-between mb-6 pl-2 w-full">
       {/* Left: Views */}
@@ -375,7 +383,7 @@ export default function DeadlinesPage() {
     }
   };
 
-  const handleAddDeadline = async (deadline: any) => {
+  const handleAddDeadline = async (deadline: Deadline) => {
     setDeadlines((prev) => [
       { ...deadline, id: Date.now().toString() },
       ...prev,
@@ -412,7 +420,7 @@ export default function DeadlinesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Toaster position="top-right" />
+      {/* <ToasterClient /> */}
       <DeadlineModal
         isOpen={showAddModal}
         onClose={() => { setShowAddModal(false); setEditDeadline(null); }}
@@ -421,7 +429,7 @@ export default function DeadlinesPage() {
           setShowAddModal(false);
           setEditDeadline(null);
         }) : handleAddDeadline}
-        initialData={editDeadline}
+        initialData={editDeadline || undefined}
         onDelete={editDeadline ? () => handleDelete(editDeadline.id) : undefined}
       />
       {/* Fixed Header (copied from dashboard/profile) */}
@@ -485,7 +493,7 @@ export default function DeadlinesPage() {
                   }}
                   components={{
                     toolbar: CalendarToolbar,
-                    event: (props: any) => <CalendarEvent {...props} view={calendarView} />,
+                    event: (props: { event: Deadline }) => <CalendarEvent {...props} view={calendarView} />,
                   }}
                 />
               </div>

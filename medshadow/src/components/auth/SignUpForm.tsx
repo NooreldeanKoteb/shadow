@@ -70,8 +70,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ userType }) => {
         router.push(`/auth/signin?email=${encodeURIComponent(formData.email)}`);
       }, 2000);
       
-    } catch (error: any) {
-      setError(error.message || 'An unexpected error occurred. Please try again.');
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An error occurred during sign up.');
+      }
     } finally {
       setIsLoading(false);
     }

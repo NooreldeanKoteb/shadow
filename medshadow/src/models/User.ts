@@ -64,4 +64,5 @@ userSchema.methods.comparePassword = async function(candidatePassword: string): 
   }
 };
 
-export const User = models.User || model<IUser>('User', userSchema); 
+export const User = models.User || model<IUser>('User', userSchema);
+export { UserRole }; 

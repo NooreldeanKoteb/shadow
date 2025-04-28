@@ -1,6 +1,14 @@
 import { useRef } from 'react';
+import React from 'react';
 
-export default function SortDropdown({ sortOption, setSortOption, sortDropdownOpen, setSortDropdownOpen }) {
+interface SortDropdownProps {
+  sortOption: '' | 'date' | 'distance';
+  setSortOption: (option: '' | 'date' | 'distance') => void;
+  sortDropdownOpen: boolean;
+  setSortDropdownOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export default function SortDropdown({ sortOption, setSortOption, sortDropdownOpen, setSortDropdownOpen }: SortDropdownProps) {
   const dropdownRef = useRef(null);
   return (
     <div className="flex items-center justify-between px-4 py-2">

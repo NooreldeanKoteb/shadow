@@ -1,8 +1,8 @@
 'use client';
+export const dynamic = "force-dynamic";
 
 import Navbar from '@/components/layout/Navbar';
 import React from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const resources = [

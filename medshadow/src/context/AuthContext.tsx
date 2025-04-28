@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface User {
   _id: string;
@@ -29,10 +29,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
 
   // Check if user is already logged in on initial load
   useEffect(() => {
     const checkAuth = async () => {
+      if (typeof window === 'undefined') {
+        setIsLoading(false);
+        return;
+      }
+
       const storedToken = localStorage.getItem('token');
       
       if (storedToken) {
@@ -87,7 +93,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       
       // Store token and user data
-      localStorage.setItem('token', data.token);
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token);
+      }
       setToken(data.token);
       setUser(data.user);
       
@@ -123,8 +131,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         throw new Error(data.message || 'Registration failed');
       }
       
-      // Auto-login after successful registration
-      await login(email, password);
+      // Store token and user data
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token);
+      }
+      setToken(data.token);
+      setUser(data.user);
+      
+      // Redirect based on role
+      if (data.user.role === 'student') {
+        router.push('/student/dashboard');
+      } else {
+        router.push('/facility/dashboard');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred during registration');
     } finally {
@@ -135,26 +154,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     try {
       setIsLoading(true);
+      setError(null);
       
-      // Call logout API if we have a token
-      if (token) {
-        await fetch('/api/auth/logout', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
       }
-      
-      // Clear local storage and state
-      localStorage.removeItem('token');
       setToken(null);
       setUser(null);
       
-      // Redirect to home page
       router.push('/');
     } catch (err) {
-      console.error('Logout error:', err);
+      setError(err instanceof Error ? err.message : 'An error occurred during logout');
     } finally {
       setIsLoading(false);
     }
@@ -164,22 +174,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setError(null);
   };
 
-  return (
-    <AuthContext.Provider
-      value={{
-        user,
-        token,
-        isLoading,
-        error,
-        login,
-        register,
-        logout,
-        clearError,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value = {
+    user,
+    token,
+    isLoading,
+    error,
+    login,
+    register,
+    logout,
+    clearError,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

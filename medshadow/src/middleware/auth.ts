@@ -15,8 +15,8 @@ export interface AuthenticatedRequest extends NextApiRequest {
   };
 }
 
-export function withAuth(handler: any) {
-  return async (req: AuthenticatedRequest, res: NextApiResponse) => {
+export function withAuth(handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>) {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '');
 
@@ -31,7 +31,7 @@ export function withAuth(handler: any) {
           role: string;
         };
 
-        req.user = decoded;
+        (req as AuthenticatedRequest).user = decoded;
         return handler(req, res);
       } catch (error) {
         return res.status(401).json({ message: 'Invalid token' });
@@ -44,7 +44,7 @@ export function withAuth(handler: any) {
 }
 
 export function withRole(roles: string[]) {
-  return (handler: any) => {
+  return (handler: (...args: unknown[]) => Promise<unknown>) => {
     return withAuth(async (req: AuthenticatedRequest, res: NextApiResponse) => {
       if (!req.user) {
         return res.status(401).json({ message: 'Authentication required' });

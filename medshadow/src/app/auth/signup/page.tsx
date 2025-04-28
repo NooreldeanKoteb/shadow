@@ -1,7 +1,9 @@
+export const dynamic = "force-dynamic";
+
 import React from 'react';
 import { getServerSession } from 'next-auth';
 import { redirect } from 'next/navigation';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
 import MainLayout from '@/components/layout/MainLayout';
 import SignUpForm from '@/components/auth/SignUpForm';
 import Image from 'next/image';

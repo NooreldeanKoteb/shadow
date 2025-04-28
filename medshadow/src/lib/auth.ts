@@ -7,8 +7,10 @@ if (!JWT_SECRET) {
 }
 
 export interface TokenPayload {
+  id: string;
   userId: string;
   role: string;
+  interests?: string[];
   iat: number;
   exp: number;
 }
@@ -23,6 +25,6 @@ export async function verifyToken(token: string): Promise<TokenPayload | null> {
   }
 }
 
-export function generateToken(userId: string, role: string): string {
-  return jwt.sign({ userId, role }, JWT_SECRET as string, { expiresIn: '7d' });
+export function generateToken(userId: string, role: string, interests?: string[]): string {
+  return jwt.sign({ id: userId, userId, role, interests }, JWT_SECRET as string, { expiresIn: '7d' });
 } 

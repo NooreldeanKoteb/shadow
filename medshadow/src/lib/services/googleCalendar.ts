@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
+import type { Deadline } from '@/app/deadlines/page';
 
 export interface GoogleCalendarEvent {
   summary: string;
@@ -97,7 +98,7 @@ class GoogleCalendarService {
   }
 
   // Convert MedShadow deadline to Google Calendar event format
-  convertDeadlineToGoogleEvent(deadline: any): GoogleCalendarEvent {
+  convertDeadlineToGoogleEvent(deadline: Deadline): GoogleCalendarEvent {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     
     return {

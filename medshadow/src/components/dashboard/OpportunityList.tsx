@@ -1,6 +1,14 @@
 import OpportunityListItem from './OpportunityListItem';
+import type { Opportunity } from '@/app/dashboard/student/page';
 
-export default function OpportunityList({ opportunities, selectedOpportunity, setSelectedOpportunity }) {
+// If you have a type/interface for Opportunity, use it instead of 'any'
+interface OpportunityListProps {
+  opportunities: Opportunity[];
+  selectedOpportunity: Opportunity | null;
+  setSelectedOpportunity: (opportunity: Opportunity) => void;
+}
+
+export default function OpportunityList({ opportunities, selectedOpportunity, setSelectedOpportunity }: OpportunityListProps) {
   return (
     <div className="overflow-y-auto h-[60vh] px-2 pb-4">
       {opportunities.length === 0 ? (

@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import { connectToDatabase } from '@/lib/mongodb';
 import { verifyToken } from '@/lib/auth';
+import { Opportunity } from '@/models/Opportunity';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export async function GET(request: Request) {
   try {

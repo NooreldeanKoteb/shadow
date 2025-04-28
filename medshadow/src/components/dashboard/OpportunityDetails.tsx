@@ -1,7 +1,8 @@
 import Image from 'next/image';
 import OpportunityActionButtons from './OpportunityActionButtons';
+import type { Opportunity } from '@/app/dashboard/student/page';
 
-function getInitials(name) {
+function getInitials(name: string) {
   return name
     .split(' ')
     .map((w) => w[0])
@@ -10,7 +11,11 @@ function getInitials(name) {
     .toUpperCase();
 }
 
-export default function OpportunityDetails({ opportunity }) {
+interface OpportunityDetailsProps {
+  opportunity: Opportunity;
+}
+
+function OpportunityDetails({ opportunity }: OpportunityDetailsProps) {
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-6 w-full h-full flex flex-col relative">
       {/* Title and badges */}
@@ -45,7 +50,7 @@ export default function OpportunityDetails({ opportunity }) {
         <h3 className="font-semibold text-[#14213D] mb-1">Requirements</h3>
         {opportunity.requirements && opportunity.requirements.length > 0 ? (
           <ul className="list-disc list-inside text-gray-700">
-            {opportunity.requirements.map((req, idx) => (
+            {opportunity.requirements.map((req: string, idx: number) => (
               <li key={idx}>{req}</li>
             ))}
           </ul>
@@ -57,7 +62,7 @@ export default function OpportunityDetails({ opportunity }) {
         <h3 className="font-semibold text-[#14213D] mb-1">Benefits</h3>
         {opportunity.benefits && opportunity.benefits.length > 0 ? (
           <ul className="list-disc list-inside text-gray-700">
-            {opportunity.benefits.map((ben, idx) => (
+            {opportunity.benefits.map((ben: string, idx: number) => (
               <li key={idx}>{ben}</li>
             ))}
           </ul>
@@ -67,4 +72,6 @@ export default function OpportunityDetails({ opportunity }) {
       </div>
     </div>
   );
-} 
+}
+
+export default OpportunityDetails; 
