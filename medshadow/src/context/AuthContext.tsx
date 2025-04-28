@@ -23,9 +23,47 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Custom hook for localStorage access
+const useLocalStorage = (key: string, initialValue: string | null) => {
+  const [storedValue, setStoredValue] = useState<string | null>(initialValue);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      const item = window.localStorage.getItem(key);
+      setStoredValue(item ? item : initialValue);
+    } catch (error) {
+      console.error('Error accessing localStorage:', error);
+      setStoredValue(initialValue);
+    }
+  }, [key, initialValue]);
+
+  const setValue = (value: string | null) => {
+    try {
+      if (typeof window === 'undefined') {
+        return;
+      }
+
+      if (value === null) {
+        window.localStorage.removeItem(key);
+      } else {
+        window.localStorage.setItem(key, value);
+      }
+      setStoredValue(value);
+    } catch (error) {
+      console.error('Error setting localStorage:', error);
+    }
+  };
+
+  return [storedValue, setValue] as const;
+};
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useLocalStorage('token', null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -39,39 +77,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const storedToken = localStorage.getItem('token');
-      
-      if (storedToken) {
+      if (token) {
         try {
-          setToken(storedToken);
-          
           // Fetch user data
           const response = await fetch('/api/auth/me', {
             headers: {
-              Authorization: `Bearer ${storedToken}`,
+              Authorization: `Bearer ${token}`,
             },
           });
-          
+
           if (response.ok) {
-            const data = await response.json();
-            setUser(data.user);
+            const userData = await response.json();
+            setUser(userData);
           } else {
-            // Token is invalid, clear it
-            localStorage.removeItem('token');
             setToken(null);
           }
-        } catch (err) {
-          console.error('Auth check error:', err);
-          localStorage.removeItem('token');
+        } catch (error) {
+          console.error('Error fetching user data:', error);
           setToken(null);
         }
       }
-      
       setIsLoading(false);
     };
-    
+
     checkAuth();
-  }, []);
+  }, [token, setToken]);
 
   const login = async (email: string, password: string) => {
     try {

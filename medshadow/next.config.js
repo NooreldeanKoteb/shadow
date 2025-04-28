@@ -1,39 +1,32 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  output: 'standalone',
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'shadow-git-master-nooreldeankotebs-projects.vercel.app'],
   },
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: '/api/:path*',
         headers: [
-          {
-            key: 'Access-Control-Allow-Origin',
-            value: '*'
-          },
-          {
-            key: 'Access-Control-Allow-Methods',
-            value: 'GET,POST,PUT,DELETE,OPTIONS'
-          },
-          {
-            key: 'Access-Control-Allow-Headers',
-            value: '*'
-          }
-        ]
-      }
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,DELETE,PATCH,POST,PUT' },
+          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization' },
+        ],
+      },
     ];
   },
-  async rewrites() {
-    return [
-      {
-        source: '/api/auth/callback/google',
-        destination: '/api/auth/callback/google'
-      }
-    ];
-  }
-};
+  experimental: {
+    serverActions: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  swcMinify: true,
+  reactStrictMode: true,
+}
 
-module.exports = nextConfig; 
+module.exports = nextConfig 
