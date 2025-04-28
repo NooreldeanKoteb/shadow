@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['localhost', 'shadow-git-master-nooreldeankotebs-projects.vercel.app'],
+    domains: ['localhost', 'medshadow.vercel.app'],
   },
   async headers() {
     return [
@@ -15,9 +15,6 @@ const nextConfig = {
         ],
       },
     ];
-  },
-  experimental: {
-    serverActions: true,
   },
   typescript: {
     ignoreBuildErrors: true,
