@@ -6,12 +6,14 @@ import { Calendar, momentLocalizer, View } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { FaGoogle, FaCalendarAlt, FaFilter, FaPlus, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Event as RBCEvent } from 'react-big-calendar';
 import { toast } from 'react-hot-toast';
 import DeadlineModal from '@/components/DeadlineModal';
+import { UserRole } from '@/types/user';
+import NavbarUserDropdown from '@/components/layout/NavbarUserDropdown';
+import { useAuth } from '@/context/AuthContext';
 
 const localizer = momentLocalizer(moment);
 
@@ -310,7 +312,7 @@ function CalendarEvent({ event, view }: { event: Deadline, view?: string }) {
 }
 
 export default function DeadlinesPage() {
-  const { data: session } = useSession();
+  const { user } = useAuth();
   const [deadlines, setDeadlines] = useState<Deadline[]>(mockDeadlines);
   const [view, setView] = useState<'calendar' | 'list'>('calendar');
   const [filterType, setFilterType] = useState<string>('all');
@@ -445,16 +447,7 @@ export default function DeadlinesPage() {
           <Link href="/resources" className="text-[#14213D] hover:text-[#FCA311] font-medium">Resources</Link>
         </nav>
         <div className="flex items-center space-x-3 relative z-[99999]" ref={userDropdownRef}>
-          <button className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-sm focus:outline-none mr-4" onClick={() => setUserDropdownOpen((o) => !o)} aria-label="User menu">
-            <Image src={session?.user?.image || '/images/default-avatar.jpg'} alt={session?.user?.name || 'User profile'} fill className="object-cover" />
-          </button>
-          {userDropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 min-w-[10rem] bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] p-2">
-              <Link href="/profiles/student/me" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">My Profile</Link>
-              <Link href="/profiles/student/edit" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">Edit Profile</Link>
-              <button className="block w-full text-left px-3 py-2 rounded text-red-600 hover:underline hover:bg-red-50" onClick={() => {/* sign out logic here */}}>Sign Out</button>
-            </div>
-          )}
+          {user && <NavbarUserDropdown user={{ role: user.role as UserRole, profileImage: user.profileImage || '/images/default-avatar.jpg', _id: user._id }} />}
         </div>
         <button className="md:hidden ml-2 p-2" onClick={() => {/* TODO: mobile sidebar */}} aria-label="Open sidebar">
           <svg className="w-6 h-6 text-[#14213D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>

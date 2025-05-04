@@ -13,6 +13,8 @@ import Sidebar from '@/components/dashboard/Sidebar';
 import OpportunityList from '@/components/dashboard/OpportunityList';
 import StatsQuickActions from '@/components/dashboard/StatsQuickActions';
 import SortDropdown from '@/components/dashboard/SortDropdown';
+import { UserRole } from '@/types/user';
+import NavbarUserDropdown from '@/components/layout/NavbarUserDropdown';
 
 interface User {
   _id: string;
@@ -593,21 +595,10 @@ export default function StudentDashboard() {
         </div>
         <nav className="hidden md:flex space-x-6">
           <Link href="/applications" className="text-[#14213D] hover:text-[#FCA311] font-medium">Applications</Link>
-          <Link href="/deadlines" className="text-[#14213D] hover:text-[#FCA311] font-medium">Deadlines</Link>
           <Link href="/profiles/student/me" className="text-[#14213D] hover:text-[#FCA311] font-medium">Profile</Link>
-          <Link href="/resources" className="text-[#14213D] hover:text-[#FCA311] font-medium">Resources</Link>
         </nav>
         <div className="flex items-center space-x-3 relative z-[99999]" ref={userDropdownRef}>
-          <button className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-sm focus:outline-none mr-4" onClick={() => setUserDropdownOpen((o) => !o)} aria-label="User menu">
-            <Image src={user?.profileImage || '/images/default-avatar.jpg'} alt={user?.name || 'User profile'} fill className="object-cover" />
-          </button>
-          {userDropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 min-w-[10rem] bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] p-2">
-              <Link href="/profiles/student/me" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">My Profile</Link>
-              <Link href="/profiles/student/edit" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">Edit Profile</Link>
-              <button className="block w-full text-left px-3 py-2 rounded text-red-600 hover:underline hover:bg-red-50" onClick={() => {/* sign out logic here */}}>Sign Out</button>
-            </div>
-          )}
+          {user && <NavbarUserDropdown user={{ role: user.role as UserRole, profileImage: user.profileImage, _id: user._id }} />}
         </div>
         <button className="md:hidden ml-2 p-2" onClick={() => setShowSidebar(!showSidebar)} aria-label="Open sidebar">
           <svg className="w-6 h-6 text-[#14213D]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>

@@ -5,6 +5,8 @@ import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { UserRole } from '@/types/user';
+import NavbarUserDropdown from '@/components/layout/NavbarUserDropdown';
 
 interface User {
   _id: string;
@@ -104,20 +106,9 @@ export default function StudentProfile() {
         <nav className="hidden md:flex space-x-6">
           <Link href="/dashboard/student" className="text-[#14213D] hover:text-[#FCA311] font-medium">Dashboard</Link>
           <Link href="/applications" className="text-[#14213D] hover:text-[#FCA311] font-medium">Applications</Link>
-          <Link href="/deadlines" className="text-[#14213D] hover:text-[#FCA311] font-medium">Deadlines</Link>
-          <Link href="/resources" className="text-[#14213D] hover:text-[#FCA311] font-medium">Resources</Link>
         </nav>
         <div className="flex items-center space-x-3 relative z-[99999]" ref={userDropdownRef}>
-          <button className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-sm focus:outline-none mr-4" onClick={() => setUserDropdownOpen((o) => !o)} aria-label="User menu">
-            <Image src={user.profileImage || '/images/default-avatar.jpg'} alt={user.name} fill className="object-cover" />
-          </button>
-          {userDropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 min-w-[10rem] bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] p-2">
-              <Link href={`/profiles/student/${user._id}`} className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">My Profile</Link>
-              <Link href="/profiles/student/edit" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">Edit Profile</Link>
-              <button className="block w-full text-left px-3 py-2 rounded text-red-600 hover:underline hover:bg-red-50" onClick={() => {/* sign out logic here */}}>Sign Out</button>
-            </div>
-          )}
+          {user && <NavbarUserDropdown user={{ role: user.role as UserRole, profileImage: user.profileImage, _id: user._id }} />}
         </div>
       </header>
 

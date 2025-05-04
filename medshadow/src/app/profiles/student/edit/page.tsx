@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import MainLayout from '@/components/layout/MainLayout';
 import Image from 'next/image';
+import { UserRole } from '@/types/user';
+import NavbarUserDropdown from '@/components/layout/NavbarUserDropdown';
 
 interface User {
   _id: string;
@@ -243,21 +245,11 @@ export default function EditStudentProfile() {
         </div>
         <nav className="hidden md:flex space-x-6">
           <Link href="/dashboard/student" className="text-[#14213D] hover:text-[#FCA311] font-medium">Dashboard</Link>
-          <Link href="/profiles/student/me" className="text-[#14213D] hover:text-[#FCA311] font-medium">Profile</Link>
           <Link href="/applications" className="text-[#14213D] hover:text-[#FCA311] font-medium">Applications</Link>
-          <Link href="/deadlines" className="text-[#14213D] hover:text-[#FCA311] font-medium">Deadlines</Link>
-          <Link href="/resources" className="text-[#14213D] hover:text-[#FCA311] font-medium">Resources</Link>
+          <Link href="/profiles/student/me" className="text-[#14213D] hover:text-[#FCA311] font-medium">Profile</Link>
         </nav>
         <div className="flex items-center space-x-3 relative z-[99999]" ref={userDropdownRef}>
-          <button className="relative w-8 h-8 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-sm focus:outline-none mr-4" onClick={() => setUserDropdownOpen((o) => !o)} aria-label="User menu">
-            <Image src={profileImagePreview || '/images/default-avatar.jpg'} alt={formData.name || 'User profile'} fill className="object-cover" />
-          </button>
-          {userDropdownOpen && (
-            <div className="absolute right-0 top-full mt-2 min-w-[10rem] bg-white border border-gray-200 rounded-lg shadow-lg z-[99999] p-2">
-              <Link href="/profiles/student/me" className="block w-full text-left px-3 py-2 rounded hover:bg-blue-50">My Profile</Link>
-              <button className="block w-full text-left px-3 py-2 rounded text-red-600 hover:underline hover:bg-red-50" onClick={() => {/* sign out logic here */}}>Sign Out</button>
-            </div>
-          )}
+          {user && <NavbarUserDropdown user={{ role: user.role as UserRole, profileImage: user.profileImage, _id: user._id }} />}
         </div>
       </header>
 

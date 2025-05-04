@@ -7,6 +7,7 @@ export interface IUserBase {
   name: string;
   email: string;
   role: UserRole;
+  profileImage?: string;
   education?: {
     school: string;
     major: string;

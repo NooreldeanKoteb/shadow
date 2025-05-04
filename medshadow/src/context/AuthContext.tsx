@@ -6,6 +6,7 @@ interface User {
   name: string;
   email: string;
   role: 'student' | 'facility';
+  profileImage: string;
   createdAt: string;
   updatedAt: string;
 }
