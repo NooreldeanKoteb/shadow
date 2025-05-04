@@ -22,7 +22,7 @@ export default async function SignUpPage({
   const userType = (searchParams?.type === 'facility' ? 'facility' : 'student');
 
   return (
-    <MainLayout>
+    <MainLayout hideUserMenu>
       <section className="relative min-h-screen bg-gradient-to-r from-[#14213D] to-[#1A365D]">
         <div className="absolute inset-0 z-0 mix-blend-overlay opacity-20">
           <Image

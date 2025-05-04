@@ -12,7 +12,7 @@ const CtaSection = dynamic(() => import('@/components/home/CtaSection'), { ssr: 
 
 export default function Home() {
   return (
-    <MainLayout>
+    <MainLayout hideUserMenu>
       <HeroSection />
       <FeatureSection />
       <TestimonialSection />

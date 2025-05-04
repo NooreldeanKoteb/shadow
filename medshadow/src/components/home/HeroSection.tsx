@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 const HeroSection = () => {
   return (
-    <section className="relative bg-gradient-to-r from-[#14213D] to-[#1A365D] text-white py-24 md:py-32 lg:py-40 overflow-hidden">
+    <section className="relative bg-gradient-to-r from-[#14213D] to-[#1A365D] text-white pt-0 pb-24 md:pb-32 lg:pb-40 overflow-hidden">
       <div className="absolute inset-0 z-0 mix-blend-overlay">
         <Image
           src="/images/hero-bg.png"
@@ -16,7 +16,7 @@ const HeroSection = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#14213D]/60 to-transparent"></div>
       </div>
       <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
-      <div className="relative z-10 container mx-auto px-4">
+      <div className="relative z-10 container mx-auto px-4 pt-20 md:pt-28">
         <div className="max-w-3xl mx-auto text-center">
           <span className="inline-block px-4 py-1 bg-[#FCA311]/20 text-[#FCA311] rounded-full text-sm font-medium mb-6 backdrop-blur-sm border border-[#FCA311]/30">
             Trusted by leading medical institutions
