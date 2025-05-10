@@ -1,18 +1,32 @@
-export const dynamic = "force-dynamic";
+'use client';
 
-import React from 'react';
-import { getServerSession } from 'next-auth';
-import { redirect } from 'next/navigation';
-import { authOptions } from '@/app/api/auth/[...nextauth]/authOptions';
+import React, { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 import MainLayout from '@/components/layout/MainLayout';
 import SignInForm from '@/components/auth/SignInForm';
 import Image from 'next/image';
 
-export default async function SignInPage() {
-  const session = await getServerSession(authOptions);
+export default function SignInPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
-  if (session) {
-    redirect('/dashboard');
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.push('/dashboard');
+    }
+  }, [session, status, router]);
+
+  if (status === 'loading' || status === 'authenticated') {
+    return (
+      <MainLayout hideUserMenu>
+        <div className="container mx-auto px-4 py-12">
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        </div>
+      </MainLayout>
+    );
   }
 
   return (
@@ -39,7 +53,7 @@ export default async function SignInPage() {
                 Sign in to your MedShadow account
               </p>
             </div>
-          <SignInForm />
+            <SignInForm />
           </div>
         </div>
       </section>

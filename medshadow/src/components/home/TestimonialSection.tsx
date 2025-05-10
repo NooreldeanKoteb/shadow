@@ -15,19 +15,19 @@ const testimonials: Testimonial[] = [
     quote: "MedShadow connected me with a cardiology shadowing opportunity at Cleveland Clinic that completely changed my career path. The application process was seamless, and the experience was invaluable.",
     name: "Sarah Johnson",
     title: "Medical Student, Johns Hopkins University",
-    image: "/images/testimonial-student.jpg"
+    image: "/images/cardiology.jpg"
   },
   {
     quote: "As a busy hospital administrator, finding qualified students for shadowing was always difficult. MedShadow streamlined our process and helped us connect with motivated students.",
     name: "Dr. Michael Chen",
     title: "Chief of Surgery, Mayo Clinic",
-    image: "/images/testimonial-doctor.jpg"
+    image: "/images/emergency.jpg"
   },
   {
     quote: "The structured program and professional connections I made through MedShadow helped guide my specialty choice. I'm now pursuing pediatric oncology thanks to my shadowing experience.",
     name: "James Wilson",
     title: "Pre-Med Student, Stanford University",
-    image: "/images/testimonial-student2.jpg"
+    image: "/images/pediatrics.jpg"
   }
 ];
 

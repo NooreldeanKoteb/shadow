@@ -39,10 +39,10 @@ const CtaSection = () => {
           <div className="mt-12 pt-8 border-t border-neutral-200">
             <div className="flex flex-col sm:flex-row items-center justify-center text-center gap-2 text-[#4B5563]">
               <span>Trusted by top medical institutions including</span>
-              <div className="flex space-x-6 items-center">
-                <Image src="/images/logo-mayo-dark.svg" alt="Mayo Clinic" width={80} height={30} className="h-6 w-auto" />
-                <Image src="/images/logo-cleveland-dark.svg" alt="Cleveland Clinic" width={80} height={30} className="h-6 w-auto" />
-                <Image src="/images/logo-hopkins-dark.svg" alt="Johns Hopkins" width={80} height={30} className="h-6 w-auto" />
+              <div className="flex items-center justify-center gap-8">
+                <Image src="/images/logo-mayo.svg" alt="Mayo Clinic" width={80} height={30} className="h-6 w-auto" />
+                <Image src="/images/logo-mayo.svg" alt="Cleveland Clinic" width={80} height={30} className="h-6 w-auto" />
+                <Image src="/images/logo-mayo.svg" alt="Johns Hopkins" width={80} height={30} className="h-6 w-auto" />
               </div>
             </div>
           </div>

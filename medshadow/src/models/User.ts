@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 
 export interface IUser extends IUserBase {
   password: string;
+  emailVerified: boolean;
 }
 
 const userSchema = new Schema<IUser>({
@@ -11,6 +12,7 @@ const userSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true, index: true },
   password: { type: String, required: true },
   role: { type: String, enum: Object.values(UserRole), required: true },
+  emailVerified: { type: Boolean, default: false },
   education: {
     school: String,
     major: String,

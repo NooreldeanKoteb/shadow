@@ -1,0 +1,146 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# MedShadow Authentication System
+
+## Overview
+This document outlines the authentication system implementation for MedShadow, a platform connecting students with medical shadowing opportunities.
+
+## Core Authentication Components
+
+### 1. NextAuth Configuration
+- Main configuration file: [src/app/api/auth/[...nextauth]/authOptions.ts](mdc:src/app/api/auth/[...nextauth]/authOptions.ts)
+- Route handler: [src/app/api/auth/[...nextauth]/route.ts](mdc:src/app/api/auth/[...nextauth]/route.ts)
+- Authentication providers:
+  - Email/Password (Credentials)
+  - Google OAuth
+
+### 2. User Model
+- Location: [src/models/User.ts](mdc:src/models/User.ts)
+- Required fields:
+  - name (String)
+  - email (String, unique)
+  - password (String, hashed)
+  - role (enum: student/facility)
+- Optional fields:
+  - education
+  - skills
+  - interests
+  - facilityInfo
+
+### 3. Protected Routes
+- Middleware: [src/middleware.ts](mdc:src/middleware.ts)
+- Public routes:
+  - /
+  - /auth/signin
+  - /auth/signup
+- Protected routes:
+  - /dashboard/*
+  - /applications/*
+  - /opportunities/*
+  - /profile/*
+
+## Implementation Guidelines
+
+### 1. Authentication Flow
+1. User attempts to access protected route
+2. Middleware checks for valid session
+3. If no session:
+   - Redirect to signin with callback URL
+4. If session exists:
+   - Verify role-based access
+   - Allow/deny access accordingly
+
+### 2. Session Management
+- JWT-based sessions
+- 30-day session duration
+- 24-hour session update interval
+- Automatic token refresh
+
+### 3. Security Requirements
+- Password requirements:
+  - Minimum 8 characters
+  - At least one uppercase letter
+  - At least one lowercase letter
+  - At least one number
+  - At least one special character
+- Rate limiting:
+  - 5 attempts per 15 minutes for login
+  - 3 attempts per hour for password reset
+- CSRF protection on all forms
+- Email verification required for new accounts
+
+### 4. Role-Based Access Control
+- Student access:
+  - Dashboard
+  - Applications
+  - Profile
+  - Resources
+- Facility access:
+  - Dashboard
+  - Opportunities
+  - Profile
+  - Applications management
+
+### 5. Error Handling
+- Standardized error responses
+- User-friendly error messages
+- Secure error logging
+- Rate limit exceeded handling
+- Invalid credentials handling
+- Session expired handling
+
+## Implementation Checklist
+
+### Phase 1: Core Authentication
+- [ ] Set up NextAuth.js configuration
+- [ ] Implement email/password authentication
+- [ ] Implement Google OAuth
+- [ ] Create User model
+- [ ] Set up protected routes middleware
+
+### Phase 2: Security Enhancements
+- [ ] Implement password policy
+- [ ] Add rate limiting
+- [ ] Set up CSRF protection
+- [ ] Implement email verification
+- [ ] Add session management
+
+### Phase 3: Role-Based Access
+- [ ] Implement role-based middleware
+- [ ] Set up role-specific routes
+- [ ] Add role-based UI components
+- [ ] Implement role-based API access
+
+### Phase 4: Error Handling
+- [ ] Create error handling middleware
+- [ ] Implement error logging
+- [ ] Add user-friendly error messages
+- [ ] Set up error monitoring
+
+## Best Practices
+1. Always use environment variables for sensitive data
+2. Implement proper input validation
+3. Use TypeScript for type safety
+4. Follow the principle of least privilege
+5. Regular security audits
+6. Keep dependencies updated
+7. Implement proper logging
+8. Regular session cleanup
+
+## Testing Requirements
+1. Unit tests for authentication logic
+2. Integration tests for auth flows
+3. Security testing
+4. Load testing for rate limits
+5. Session management testing
+6. Role-based access testing
+
+## Maintenance
+1. Regular security updates
+2. Session cleanup jobs
+3. User data cleanup
+4. Audit log review
+5. Performance monitoring

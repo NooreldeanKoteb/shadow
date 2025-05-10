@@ -3,41 +3,41 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import MainLayout from '@/components/layout/MainLayout';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (status === 'loading') {
+      return;
+    }
+
+    if (status === 'unauthenticated') {
       router.push('/auth/signin');
       return;
     }
 
-    // Get user data from token
-    try {
-      const userData = JSON.parse(atob(token.split('.')[1]));
-      const userRole = userData.role;
-
+    if (session?.user?.role) {
       // Redirect to role-specific dashboard
-      if (userRole === 'student') {
+      if (session.user.role === 'student') {
         router.push('/dashboard/student');
-      } else if (userRole === 'facility') {
+      } else if (session.user.role === 'facility') {
         router.push('/dashboard/facility');
       } else {
-        // If role is unknown, show loading state
+        // If role is unknown, show error state
         setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error parsing token:', error);
+    } else {
+      // If no role is found, redirect to sign in
       router.push('/auth/signin');
     }
-  }, [router]);
+  }, [session, status, router]);
 
-  if (isLoading) {
+  if (isLoading || status === 'loading') {
     return (
       <MainLayout>
         <div className="container mx-auto px-4 py-12">
