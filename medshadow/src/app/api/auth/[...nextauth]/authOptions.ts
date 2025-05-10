@@ -67,7 +67,7 @@ const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account }) {
       try {
         if (account?.provider === "google") {
           // Handle Google sign in

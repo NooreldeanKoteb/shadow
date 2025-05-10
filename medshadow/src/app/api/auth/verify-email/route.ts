@@ -1,19 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyToken } from '@/utils/emailVerification';
-import User from '@/models/User';
+import { verifyEmailToken } from '@/utils/emailVerification';
+import { User } from '@/models/User';
 
 export async function GET(request: NextRequest) {
   try {
     const token = request.nextUrl.searchParams.get('token');
-    if (!token) {
+    const email = request.nextUrl.searchParams.get('email');
+    if (!token || !email) {
       return NextResponse.json(
-        { error: 'Token is required' },
+        { error: 'Token and email are required' },
         { status: 400 }
       );
     }
 
-    const email = await verifyToken(token);
-    if (!email) {
+    const isValid = await verifyEmailToken(email, token);
+    if (!isValid) {
       return NextResponse.json(
         { error: 'Invalid token' },
         { status: 400 }

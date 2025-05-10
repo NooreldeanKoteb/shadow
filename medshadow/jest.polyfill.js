@@ -1,27 +1,25 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-// jest.polyfill.js
+// jest.polyfill.mjs
+
+import { MessagePort, MessageChannel } from 'worker_threads';
+import { TextEncoder, TextDecoder } from 'util';
+import { ReadableStream, WritableStream } from 'web-streams-polyfill/dist/ponyfill.js';
+import { fetch, Request, Response, Headers } from 'undici';
+import nodeFetch from 'node-fetch';
 
 // Polyfill MessagePort and MessageChannel for undici
-try {
-  const { MessagePort, MessageChannel } = require('worker_threads');
-  global.MessagePort = MessagePort;
-  global.MessageChannel = MessageChannel;
-} catch (e) {
-  // worker_threads may not be available in all environments, but is in Node 12+
-}
+global.MessagePort = MessagePort;
+global.MessageChannel = MessageChannel;
 
 // Polyfill TextEncoder/TextDecoder
-const { TextEncoder, TextDecoder } = require('util');
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
 // Polyfill ReadableStream/WritableStream
-const { ReadableStream, WritableStream } = require('web-streams-polyfill/dist/ponyfill.js');
 global.ReadableStream = ReadableStream;
 global.WritableStream = WritableStream;
 
 // Now require undici and assign fetch, Request, Response, Headers
-const { fetch, Request, Response, Headers } = require('undici');
 global.fetch = fetch;
 global.Request = Request;
 global.Response = Response;
@@ -29,7 +27,7 @@ global.Headers = Headers;
 
 // Polyfill fetch for Node.js (used by Upstash Redis)
 if (typeof global.fetch === 'undefined') {
-  global.fetch = require('node-fetch');
+  global.fetch = nodeFetch;
 }
 
 // Polyfill Request/Response/Headers for Next.js API route tests

@@ -1,5 +1,11 @@
 import { generateVerificationToken, verifyEmailToken } from '../emailVerification';
 
+// Polyfill fetch for tests
+if (typeof global.fetch === 'undefined') {
+  // @ts-expect-error: Polyfill for fetch needed for tests
+  global.fetch = () => Promise.resolve({ ok: true });
+}
+
 // Mock Redis client
 const mockRedis = {
   set: jest.fn(),

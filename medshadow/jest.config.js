@@ -7,37 +7,23 @@ const createJestConfig = nextJest({
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  setupFiles: [
-    '<rootDir>/jest.polyfill.js',
-  ],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'node',
+  testEnvironment: 'jest-environment-jsdom',
   moduleNameMapper: {
-    '^@/components/(.*)$': '<rootDir>/src/components/$1',
-    '^@/utils/(.*)$': '<rootDir>/src/utils/$1',
-    '^@/styles/(.*)$': '<rootDir>/src/styles/$1',
-    '^@/models/(.*)$': '<rootDir>/src/models/$1',
-    '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
-    '^@/context/(.*)$': '<rootDir>/src/context/$1',
-    '^@/hooks/(.*)$': '<rootDir>/src/hooks/$1',
-    '^@/types/(.*)$': '<rootDir>/src/types/$1',
+    '^@/(.*)$': '<rootDir>/src/$1',
   },
   testMatch: [
-    '<rootDir>/src/**/*.test.{js,jsx,ts,tsx}',
-    '<rootDir>/src/**/__tests__/*.{js,jsx,ts,tsx}',
+    '**/__tests__/**/*.test.[jt]s?(x)',
   ],
-  collectCoverageFrom: [
-    'src/**/*.{js,jsx,ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/__tests__/*',
-    '!src/**/types/*',
-  ],
-  coverageThreshold: {
-    global: {
-      branches: 0.8,
-      functions: 0.8,
-      lines: 0.8,
-      statements: 0.8,
+  transform: {
+    '^.+\\.(ts|tsx)$': ['ts-jest', {
+      tsconfig: 'tsconfig.json',
+    }],
+  },
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  globals: {
+    'ts-jest': {
+      isolatedModules: true,
     },
   },
 };

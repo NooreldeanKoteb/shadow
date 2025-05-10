@@ -4,6 +4,17 @@ import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 
+// Add custom jest matchers from jest-dom
+import { MessagePort, MessageChannel } from 'worker_threads';
+import { ReadableStream } from 'stream/web';
+
+// Polyfill for MessagePort and MessageChannel
+global.MessagePort = MessagePort;
+global.MessageChannel = MessageChannel;
+
+// Polyfill for ReadableStream
+global.ReadableStream = ReadableStream;
+
 // Mock next/router
 jest.mock('next/router', () => ({
   useRouter() {
@@ -36,14 +47,17 @@ jest.mock('next/navigation', () => ({
   },
 }));
 
-// Mock next-auth
-jest.mock('next-auth/react', () => ({
-  useSession() {
-    return {
-      data: null,
-      status: 'unauthenticated',
-    };
+// Mock next/server
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn(),
+    redirect: jest.fn(),
   },
+}));
+
+// Mock next-auth
+jest.mock('next-auth', () => ({
+  getServerSession: jest.fn(),
   signIn: jest.fn(),
   signOut: jest.fn(),
 }));
@@ -61,4 +75,9 @@ process.env.EMAIL_FROM = 'test@example.com';
 
 // Add dummy Upstash Redis environment variables for tests
 process.env.UPSTASH_REDIS_REST_URL = 'https://dummy.upstash.io';
-process.env.UPSTASH_REDIS_REST_TOKEN = 'dummy-token'; 
+process.env.UPSTASH_REDIS_REST_TOKEN = 'dummy-token';
+
+// Clean up after each test
+afterEach(() => {
+  jest.clearAllMocks();
+}); 
