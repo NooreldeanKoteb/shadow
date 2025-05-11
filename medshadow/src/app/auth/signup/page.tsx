@@ -45,7 +45,7 @@ export default async function SignUpPage({
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-[#14213D] mb-2">
                 {userType === 'student' ? 'Join as a Student' : 'Register Your Facility'}
-              </h1>
+          </h1>
               <p className="text-[#4B5563]">
                 {userType === 'student'
                   ? 'Create an account to find shadowing opportunities'
@@ -53,9 +53,9 @@ export default async function SignUpPage({
                 }
               </p>
             </div>
-            <SignUpForm userType={userType} />
-          </div>
+          <SignUpForm userType={userType} />
         </div>
+      </div>
       </section>
     </MainLayout>
   );

@@ -12,7 +12,7 @@ const roleBasedAccess = {
 
 export async function middleware(request: NextRequest) {
   try {
-    const { pathname } = request.nextUrl;
+  const { pathname } = request.nextUrl;
 
     // Apply rate limiting for auth-related routes
     if (pathname.startsWith('/auth/signin')) {
@@ -31,26 +31,26 @@ export async function middleware(request: NextRequest) {
 
     const token = await getToken({ req: request });
 
-    // Public paths that don't require authentication
+  // Public paths that don't require authentication
     const publicPaths = ['/', '/auth/signin', '/auth/signup', '/auth/error'];
     const isPublicPath = publicPaths.some(path => pathname === path || pathname.startsWith('/auth/'));
 
-    // If it's a public path
-    if (isPublicPath) {
-      // Only redirect to dashboard if explicitly trying to access signin/signup while authenticated
-      if (token && (pathname === '/auth/signin' || pathname === '/auth/signup')) {
+  // If it's a public path
+  if (isPublicPath) {
+    // Only redirect to dashboard if explicitly trying to access signin/signup while authenticated
+    if (token && (pathname === '/auth/signin' || pathname === '/auth/signup')) {
         const role = token.role as keyof typeof roleBasedAccess;
         return NextResponse.redirect(new URL(`/dashboard/${role}`, request.url));
-      }
-      return NextResponse.next();
     }
+    return NextResponse.next();
+  }
 
-    // If there's no token and it's not a public path, redirect to signin
-    if (!token) {
-      const signInUrl = new URL('/auth/signin', request.url);
-      signInUrl.searchParams.set('callbackUrl', pathname);
-      return NextResponse.redirect(signInUrl);
-    }
+  // If there's no token and it's not a public path, redirect to signin
+  if (!token) {
+    const signInUrl = new URL('/auth/signin', request.url);
+    signInUrl.searchParams.set('callbackUrl', pathname);
+    return NextResponse.redirect(signInUrl);
+  }
 
     // Handle root dashboard path
     if (pathname === '/dashboard') {
@@ -70,7 +70,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(`/dashboard/${userRole}`, request.url));
     }
 
-    return NextResponse.next();
+  return NextResponse.next();
   } catch (error) {
     console.error('Middleware error:', error);
     // In case of error, redirect to error page

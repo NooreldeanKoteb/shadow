@@ -1,5 +1,5 @@
 import OpportunityListItem from './OpportunityListItem';
-import type { Opportunity } from '@/app/dashboard/student/page';
+import type { Opportunity } from './StudentDashboardClient';
 
 // If you have a type/interface for Opportunity, use it instead of 'any'
 interface OpportunityListProps {
@@ -10,7 +10,7 @@ interface OpportunityListProps {
 
 export default function OpportunityList({ opportunities, selectedOpportunity, setSelectedOpportunity }: OpportunityListProps) {
   return (
-    <div className="overflow-y-auto h-[60vh] px-2 pb-4">
+    <div className="overflow-y-auto h-[72vh] px-2 pb-4">
       {opportunities.length === 0 ? (
         <div className="p-4 text-gray-400 text-center">No opportunities found.</div>
       ) : (

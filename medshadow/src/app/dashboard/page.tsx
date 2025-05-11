@@ -7,7 +7,7 @@ export default async function DashboardPage() {
 
   if (!session) {
     redirect('/auth/signin');
-  }
+    }
 
   const role = session.user.role;
   redirect(`/dashboard/${role}`);

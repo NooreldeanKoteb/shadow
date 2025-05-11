@@ -1,50 +1,62 @@
-import { useState, useRef, useEffect } from 'react';
+'use client';
+
+import { useRef, useEffect, useState } from 'react';
 
 interface DropdownFilterProps {
   label: string;
   options: string[];
   selected: string[];
-  setSelected: (v: string[]) => void;
+  setSelected: (selected: string[]) => void;
 }
 
-export default function DropdownFilter({ label, options, selected, setSelected }: DropdownFilterProps) {
-  const [open, setOpen] = useState(false);
+export default function DropdownFilter({
+  label,
+  options,
+  selected,
+  setSelected
+}: DropdownFilterProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [search, setSearch] = useState('');
-  const ref = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
+      // Determine if this is a large dropdown (Specialty or Location)
+      const isLarge = label === 'Specialty' || label === 'Location';
+      const dropdownWidth = isLarge ? 'w-72' : 'w-48';
+      const optionFont = isLarge ? 'text-base' : 'text-sm';
+
+      // Filter options by search
+      const filteredOptions = search.trim() === ''
+        ? options
+        : options.filter(opt => opt.toLowerCase().includes(search.toLowerCase()));
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
       }
     }
-    if (open) {
+
+    if (isOpen) {
       document.addEventListener('mousedown', handleClick);
     } else {
       document.removeEventListener('mousedown', handleClick);
     }
-    return () => document.removeEventListener('mousedown', handleClick);
-  }, [open]);
 
-  // Determine if this is a large dropdown (Specialty or Location)
-  const isLarge = label === 'Specialty' || label === 'Location';
-  const dropdownWidth = isLarge ? 'w-72' : 'w-48';
-  const optionFont = isLarge ? 'text-base' : 'text-sm';
 
-  // Filter options by search
-  const filteredOptions = search.trim() === ''
-    ? options
-    : options.filter(opt => opt.toLowerCase().includes(search.toLowerCase()));
+
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+    };
+  }, [isOpen]);
+
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={dropdownRef}>
       <button
         type="button"
+        onClick={() => setIsOpen(!isOpen)}
         className="px-3 py-1.5 bg-white border border-gray-300 rounded-lg shadow-sm flex items-center gap-2 min-w-[120px]"
-        onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
-        aria-expanded={open}
+        aria-expanded={isOpen}
       >
         <span className="font-medium text-sm text-[#14213D]">{label}</span>
         {selected.length > 0 && (
@@ -52,15 +64,26 @@ export default function DropdownFilter({ label, options, selected, setSelected }
             {selected.length === 1 ? selected[0] : `${selected.length} selected`}
           </span>
         )}
-        <svg className="w-4 h-4 ml-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+        <svg
+          className={`w-4 h-4 ml-1 text-gray-400" transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
       </button>
-      {open && (
+
+      {isOpen && (
         <div className={`absolute left-0 mt-2 ${dropdownWidth} bg-white border border-gray-200 rounded-lg shadow-lg z-[9999] p-2`}>
           <div className="flex justify-between items-center mb-2">
             <span className="font-semibold text-sm text-[#14213D]">{label}</span>
             <button
               className="text-xs text-gray-500 underline hover:text-[#FCA311] ml-2"
-              onClick={() => setSelected([])}
+              onClick={() => {
+                setSelected([]);
+                setSearch('');
+              }}
               type="button"
             >
               Clear

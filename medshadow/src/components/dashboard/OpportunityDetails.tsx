@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import OpportunityActionButtons from './OpportunityActionButtons';
-import type { Opportunity } from '@/app/dashboard/student/page';
+import type { Opportunity } from './StudentDashboardClient';
 
 function getInitials(name: string) {
   return name
@@ -16,20 +16,27 @@ interface OpportunityDetailsProps {
 }
 
 function OpportunityDetails({ opportunity }: OpportunityDetailsProps) {
+  const facilityName = typeof opportunity.facility === 'string'
+    ? opportunity.facility
+    : opportunity.facility?.name || 'Unknown Facility';
+  const locationStr = typeof opportunity.location === 'string'
+    ? opportunity.location
+    : `${opportunity.location.city}, ${opportunity.location.state}`;
+
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-blue-100 p-6 w-full h-full flex flex-col relative">
       {/* Title and badges */}
       <div className="flex flex-col md:flex-row md:items-start mb-6 gap-4">
         <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-[#FCA311] shadow-md flex items-center justify-center bg-white text-[#FCA311] font-bold text-2xl">
           {opportunity.facilityLogo ? (
-            <Image src={opportunity.facilityLogo} alt={opportunity.facility} fill className="object-cover rounded-full" />
+            <Image src={opportunity.facilityLogo} alt={facilityName} fill className="object-cover rounded-full" />
           ) : (
-            <span>{getInitials(opportunity.facility)}</span>
+            <span>{getInitials(facilityName)}</span>
           )}
         </div>
         <div className="flex-1 min-w-0">
           <h2 className="text-2xl font-bold text-[#14213D] mb-1 truncate">{opportunity.title}</h2>
-          <div className="text-gray-600 mb-1 truncate">{opportunity.facility} • {opportunity.location}</div>
+          <div className="text-gray-600 mb-1 truncate">{facilityName} • {locationStr}</div>
           <div className="flex flex-wrap gap-2 text-xs mb-2">
             <span className="bg-[#FCA311]/10 text-[#FCA311] px-2 py-1 rounded">{opportunity.type}</span>
             <span className="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs font-medium">{opportunity.specialty}</span>
