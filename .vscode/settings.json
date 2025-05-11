@@ -8,5 +8,8 @@
       "javascript": "javascript",
       "css": "css"
     },
-    "search.useGlobalIgnoreFiles": false
-  }
+    "search.useGlobalIgnoreFiles": false,
+    "cSpell.words": [
+    "NEXTAUTH"
+  ]
+}
