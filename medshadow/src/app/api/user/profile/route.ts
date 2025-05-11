@@ -38,7 +38,7 @@ export async function PUT(request: Request) {
   try {
     const data = await request.json();
     // In a real application, this would update the user data in your database
-    console.log('Would update user with data:', data);
+
     return NextResponse.json({ user: { ...mockUser, ...data } });
   } catch (error) {
     console.error('Error updating user profile:', error);

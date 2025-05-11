@@ -37,7 +37,6 @@ const authOptions: AuthOptions = {
           const user = await User.findOne({ email: credentials.email });
 
           if (!user) {
-            console.log("User not found:", credentials.email);
             throw new Error("Invalid email or password");
           }
 
@@ -47,11 +46,8 @@ const authOptions: AuthOptions = {
           );
 
           if (!isPasswordValid) {
-            console.log("Invalid password for user:", credentials.email);
             throw new Error("Invalid email or password");
           }
-
-          console.log("Login successful for:", credentials.email);
           
           return {
             id: user._id.toString(),

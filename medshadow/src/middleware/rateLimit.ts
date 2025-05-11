@@ -2,11 +2,18 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { Redis } from '@upstash/redis';
 
-// Initialize Redis client
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || '',
-});
+// Initialize Redis client with fallback
+let redis: Redis | null = null;
+try {
+  if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
+    redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN,
+    });
+  }
+} catch (error) {
+  console.error('Failed to initialize Redis client:', error);
+}
 
 interface RateLimitConfig {
   windowMs: number;
@@ -16,7 +23,7 @@ interface RateLimitConfig {
 
 const defaultConfig: RateLimitConfig = {
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts
+  max: 10, // 10 attempts
   message: 'Too many requests, please try again later',
 };
 
@@ -24,6 +31,11 @@ export async function rateLimit(
   request: NextRequest,
   config: Partial<RateLimitConfig> = {}
 ): Promise<NextResponse | null> {
+  // If Redis is not configured, skip rate limiting
+  if (!redis) {
+    return null;
+  }
+
   const { windowMs, max, message } = { ...defaultConfig, ...config };
   
   try {
@@ -64,13 +76,13 @@ export async function rateLimit(
 export const loginRateLimit = (request: NextRequest) => 
   rateLimit(request, {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 5, // 5 attempts
+    max: 10, // 10 attempts
     message: 'Too many login attempts, please try again later',
   });
 
 export const passwordResetRateLimit = (request: NextRequest) =>
   rateLimit(request, {
     windowMs: 60 * 60 * 1000, // 1 hour
-    max: 3, // 3 attempts
+    max: 5, // 5 attempts
     message: 'Too many password reset attempts, please try again later',
   }); 

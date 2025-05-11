@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase } from '@/lib/mongodb';
 import { User } from '@/models/User';
 import { generateToken } from '@/lib/auth';
+import { sendVerificationEmail } from '@/utils/emailVerification';
 
 export async function POST(request: Request) {
   try {
@@ -41,8 +42,17 @@ export async function POST(request: Request) {
       name,
       email: email.toLowerCase(),
       password,
-      role
+      role,
+      emailVerified: false // Explicitly set to false
     });
+
+    // Send verification email
+    try {
+      await sendVerificationEmail(email, name);
+    } catch (emailError) {
+      console.error('Failed to send verification email:', emailError);
+      // Don't fail registration if email fails, but log the error
+    }
 
     // Generate JWT token
     const token = generateToken(user._id.toString(), user.role);
@@ -53,12 +63,14 @@ export async function POST(request: Request) {
       name: user.name,
       email: user.email,
       role: user.role,
+      emailVerified: user.emailVerified
     };
 
     return NextResponse.json({
       success: true,
       user: userWithoutPassword,
-      token
+      token,
+      message: 'Registration successful. Please check your email to verify your account.'
     });
 
   } catch (error) {

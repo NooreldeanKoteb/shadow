@@ -23,11 +23,6 @@ export async function POST(request: Request) {
     // Find user with password field
     const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
     
-    console.log('Login attempt:', {
-      email,
-      userFound: !!user,
-      hasPassword: user?.password ? 'yes' : 'no'
-    });
 
     if (!user) {
       return NextResponse.json(
@@ -38,11 +33,6 @@ export async function POST(request: Request) {
 
     // Verify password directly
     const isValid = await bcrypt.compare(password, user.password);
-    console.log('Password validation:', {
-      isValid,
-      providedPassword: password,
-      hashedPassword: user.password
-    });
 
     if (!isValid) {
       return NextResponse.json(

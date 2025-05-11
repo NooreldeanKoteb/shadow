@@ -6,8 +6,8 @@ import { csrfProtection } from './middleware/csrf';
 
 // Define role-based access control
 const roleBasedAccess = {
-  student: ['/dashboard', '/applications', '/profile', '/resources'],
-  facility: ['/dashboard', '/opportunities', '/profile', '/applications']
+  student: ['/dashboard/student', '/applications', '/profile', '/resources'],
+  facility: ['/dashboard/facility', '/opportunities', '/profile', '/applications']
 };
 
 export async function middleware(request: NextRequest) {
@@ -32,14 +32,15 @@ export async function middleware(request: NextRequest) {
     const token = await getToken({ req: request });
 
     // Public paths that don't require authentication
-    const publicPaths = ['/', '/auth/signin', '/auth/signup'];
-    const isPublicPath = publicPaths.some(path => pathname.startsWith(path));
+    const publicPaths = ['/', '/auth/signin', '/auth/signup', '/auth/error'];
+    const isPublicPath = publicPaths.some(path => pathname === path || pathname.startsWith('/auth/'));
 
     // If it's a public path
     if (isPublicPath) {
       // Only redirect to dashboard if explicitly trying to access signin/signup while authenticated
       if (token && (pathname === '/auth/signin' || pathname === '/auth/signup')) {
-        return NextResponse.redirect(new URL('/dashboard', request.url));
+        const role = token.role as keyof typeof roleBasedAccess;
+        return NextResponse.redirect(new URL(`/dashboard/${role}`, request.url));
       }
       return NextResponse.next();
     }
@@ -51,6 +52,12 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(signInUrl);
     }
 
+    // Handle root dashboard path
+    if (pathname === '/dashboard') {
+      const role = token.role as keyof typeof roleBasedAccess;
+      return NextResponse.redirect(new URL(`/dashboard/${role}`, request.url));
+    }
+
     // Check role-based access
     const userRole = token.role as keyof typeof roleBasedAccess;
     const allowedPaths = roleBasedAccess[userRole] || [];
@@ -59,8 +66,8 @@ export async function middleware(request: NextRequest) {
     const hasAccess = allowedPaths.some(path => pathname.startsWith(path));
     
     if (!hasAccess) {
-      // Redirect to unauthorized page or dashboard
-      return NextResponse.redirect(new URL('/unauthorized', request.url));
+      // Redirect to role-specific dashboard
+      return NextResponse.redirect(new URL(`/dashboard/${userRole}`, request.url));
     }
 
     return NextResponse.next();
@@ -73,10 +80,9 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    '/',
     '/dashboard/:path*',
-    '/auth/signin',
-    '/auth/signup',
-    '/auth/reset-password',
+    '/auth/:path*',
     '/applications/:path*',
     '/opportunities/:path*',
     '/profile/:path*',

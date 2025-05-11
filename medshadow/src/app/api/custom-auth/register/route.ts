@@ -44,11 +44,6 @@ export async function POST(request: Request) {
       role
     });
 
-    console.log('User created:', {
-      id: user._id,
-      email: user.email,
-      hasPassword: !!user.password
-    });
 
     // Generate JWT token
     const token = generateToken(user._id.toString(), user.role);

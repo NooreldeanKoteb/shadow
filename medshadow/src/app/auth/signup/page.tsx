@@ -1,4 +1,5 @@
 export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 import React from 'react';
 import { getServerSession } from 'next-auth';
@@ -16,7 +17,8 @@ export default async function SignUpPage({
   const session = await getServerSession(authOptions);
 
   if (session) {
-    redirect('/dashboard');
+    const role = session.user.role as 'student' | 'facility';
+    redirect(`/dashboard/${role}`);
   }
 
   const userType = (searchParams?.type === 'facility' ? 'facility' : 'student');
@@ -43,7 +45,7 @@ export default async function SignUpPage({
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-[#14213D] mb-2">
                 {userType === 'student' ? 'Join as a Student' : 'Register Your Facility'}
-          </h1>
+              </h1>
               <p className="text-[#4B5563]">
                 {userType === 'student'
                   ? 'Create an account to find shadowing opportunities'
@@ -51,9 +53,9 @@ export default async function SignUpPage({
                 }
               </p>
             </div>
-          <SignUpForm userType={userType} />
+            <SignUpForm userType={userType} />
+          </div>
         </div>
-      </div>
       </section>
     </MainLayout>
   );

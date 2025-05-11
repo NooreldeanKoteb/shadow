@@ -134,7 +134,7 @@ const SignInForm: React.FC = () => {
       </div>
       
       <p className="mt-8 text-center text-sm text-[#4B5563]">
-        Don't have an account?{' '}
+        Don&apos;t have an account?{' '}
         <Link href="/auth/signup" className="font-medium text-[#FCA311] hover:text-[#FCA311]/80">
           Create an account
         </Link>

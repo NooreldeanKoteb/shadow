@@ -7,5 +7,6 @@
       "html": "html",
       "javascript": "javascript",
       "css": "css"
-    }
+    },
+    "search.useGlobalIgnoreFiles": false
   }
