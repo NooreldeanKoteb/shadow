@@ -17,7 +17,7 @@ interface SMTPError extends Error {
 let transporter: nodemailer.Transporter;
 
 async function createTransporter() {
-  if (process.env.NODE_ENV === 'development' && !process.env.SMTP_USER) {
+  // if (process.env.NODE_ENV === 'development' && !process.env.SMTP_USER) {
     // Create test account for development if no SMTP credentials are provided
     const testAccount = await nodemailer.createTestAccount();
     console.log('Ethereal Email Account created:', {
@@ -35,18 +35,18 @@ async function createTransporter() {
         pass: testAccount.pass,
       },
     });
-  }
+  // }
 
   // Production SMTP configuration
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: parseInt(process.env.SMTP_PORT || '587'),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASSWORD,
-    },
-  });
+  // return nodemailer.createTransport({
+  //   host: process.env.SMTP_HOST,
+  //   port: parseInt(process.env.SMTP_PORT || '587'),
+  //   secure: process.env.SMTP_SECURE === 'true',
+  //   auth: {
+  //     user: process.env.SMTP_USER,
+  //     pass: process.env.SMTP_PASSWORD,
+  //   },
+  // });
 }
 
 export async function sendEmail({ to, subject, html }: EmailOptions): Promise<void> {
