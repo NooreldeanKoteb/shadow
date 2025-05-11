@@ -17,7 +17,7 @@ This document outlines the authentication system implementation for MedShadow, a
   - Email/Password (Credentials)
   - Google OAuth
 
-### 2. User Model
+### 2. User Model & Types
 - Location: [src/models/User.ts](mdc:src/models/User.ts)
 - Required fields:
   - name (String)
@@ -29,8 +29,26 @@ This document outlines the authentication system implementation for MedShadow, a
   - skills
   - interests
   - facilityInfo
+- TypeScript types: [user.ts](mdc:src/types/user.ts)
+  - UserRole enum (STUDENT, FACILITY)
+  - Base user interface
+  - Education and facility information types
 
-### 3. Protected Routes
+### 3. Authentication UI Components
+- [SignUpForm.tsx](mdc:src/components/auth/SignUpForm.tsx)
+  - Handles new user registration
+  - Supports both email/password and Google OAuth
+  - Validates passwords and enforces requirements
+  - Integrates with UserRole enum for role selection
+- [SignInForm.tsx](mdc:src/components/auth/SignInForm.tsx)
+  - Manages user login
+  - Supports email/password and Google authentication
+  - Handles callback URLs for redirects
+  - Stores JWT token in localStorage
+- [NavbarUserDropdown.tsx](mdc:src/components/layout/NavbarUserDropdown.tsx)
+  - Displays user info and sign out option
+
+### 4. Protected Routes
 - Middleware: [src/middleware.ts](mdc:src/middleware.ts)
 - Public routes:
   - /
@@ -91,6 +109,17 @@ This document outlines the authentication system implementation for MedShadow, a
 - Rate limit exceeded handling
 - Invalid credentials handling
 - Session expired handling
+
+### 6. UI & Styling Best Practices
+- Always use the UserRole enum for role management
+- Include proper type checking for user objects
+- Handle loading and error states in forms
+- Use the built-in password hashing in the User model
+- Use established styling patterns:
+  - `form-input` for inputs
+  - `btn-primary` for main actions
+  - `btn-secondary` for alternative actions
+  - Consistent error message styling
 
 ## Implementation Checklist
 

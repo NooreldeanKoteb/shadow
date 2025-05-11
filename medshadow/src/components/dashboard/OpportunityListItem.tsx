@@ -32,7 +32,7 @@ export default function OpportunityListItem({ opportunity, selected, onClick }: 
   const facilityName = getFacilityName(opportunity.facility);
 
   return (
-    <li>
+    <li className="mt-2">
       <button
         className={`group w-full text-left flex items-center gap-3 px-3 py-2 rounded-xl border border-neutral-200 bg-white shadow-sm hover:shadow-md hover:border-[#FCA311]/30 transition-all duration-300 relative overflow-hidden ${selected ? 'bg-[#FCA311]/25 border-[#FCA311] ring-2 ring-[#FCA311]/50' : ''}`}
         onClick={onClick}
