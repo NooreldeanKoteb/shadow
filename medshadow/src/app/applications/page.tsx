@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSession } from 'next-auth/react';
 import NavbarUserDropdown from '@/components/layout/NavbarUserDropdown';
 import { UserRole } from '@/types/user';
 
@@ -128,6 +129,7 @@ const mockApplications: Application[] = [
 
 export default function ApplicationsPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [user, setUser] = useState<User | null>(null);
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -137,30 +139,23 @@ export default function ApplicationsPage() {
 
   useEffect(() => {
     // Check if user is logged in
-    const token = localStorage.getItem('token');
-    if (!token) {
+    if (status === 'unauthenticated') {
       router.push('/auth/signin');
       return;
     }
 
-    // Get user data from token
-    try {
-      const userData = JSON.parse(atob(token.split('.')[1]));
-      
+    if (status === 'authenticated') {
       // Verify this is a student
-      if (userData.role !== 'student') {
+      if (session.user.role !== 'student') {
         router.push('/dashboard');
         return;
       }
       
       // Fetch user details and applications
-      fetchUserDetails(token);
-      fetchApplications(token);
-    } catch (error) {
-      console.error('Error parsing token:', error);
-      router.push('/auth/signin');
+      fetchUserDetails();
+      fetchApplications();
     }
-  }, [router]);
+  }, [status, session, router]);
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -176,13 +171,9 @@ export default function ApplicationsPage() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [userDropdownOpen]);
 
-  const fetchUserDetails = async (token: string) => {
+  const fetchUserDetails = async () => {
     try {
-      const response = await fetch('/api/user/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await fetch('/api/user/profile');
       
       if (response.ok) {
         const data = await response.json();
@@ -193,7 +184,7 @@ export default function ApplicationsPage() {
     }
   };
 
-  const fetchApplications = async (token: string) => {
+  const fetchApplications = async () => {
     try {
       // In a real app, this would fetch from your API
       // For now, using mock data
