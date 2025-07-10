@@ -1,0 +1,392 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Schema Refactoring Guide
+
+## Current Schema Structure
+
+### 1. User and Profile Schemas
+
+#### User Schema ([User.ts](mdc:src/models/User.ts))
+```typescript
+interface User {
+  _id: ObjectId;
+  name: string;
+  email: string;
+  password: string; // Hashed
+  role: UserRole;
+  emailVerified: boolean;
+  education?: {
+    school: string;
+    major: string;
+    graduationYear: number;
+    gpa: number;
+  };
+  skills?: string[];
+  interests?: string[];
+  facilityInfo?: {
+    type: 'hospital' | 'clinic' | 'private practice' | 'other';
+    specialties: string[];
+    location: {
+      address: string;
+      city: string;
+      state: string;
+      zipCode: string;
+      coordinates: {
+        lat: number;
+        lng: number;
+      };
+    };
+    contact: {
+      phone: string;
+      website: string;
+    };
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// NextAuth extensions
+interface Session {
+  user: {
+    id: string;
+    role: UserRole;
+  } & DefaultSession["user"];
+}
+
+interface JWT {
+  id: string;
+  role: UserRole;
+}
+```
+
+#### StudentProfile Schema ([StudentProfile.ts](mdc:src/models/StudentProfile.ts))
+```typescript
+interface StudentProfile {
+  userId: ObjectId;
+  educationLevel: 'HIGH_SCHOOL' | 'UNDERGRADUATE' | 'GRADUATE' | 'POSTGRADUATE';
+  institution: string;
+  graduationYear: number;
+  interests: string[];
+  skills: string[];
+  bio: string;
+  resumeUrl?: string;
+  totalHours: number;
+  verifiedHours: number;
+  subscriptionStatus: 'FREE' | 'PREMIUM' | 'EXPIRED';
+  subscriptionExpiry?: Date;
+  preferredLocations: {
+    type: 'Point';
+    coordinates: [number, number];
+    radius: number;
+  }[];
+  specialties: string[];
+  availability: {
+    weekdays: ('MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY')[];
+    preferredHours: {
+      start: string;
+      end: string;
+    };
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+#### FacilityProfile Schema ([FacilityProfile.ts](mdc:src/models/FacilityProfile.ts))
+```typescript
+interface FacilityProfile {
+  userId: ObjectId;
+  facilityName: string;
+  facilityType: 'HOSPITAL' | 'CLINIC' | 'PRIVATE_PRACTICE' | 'RESEARCH_CENTER' | 'OTHER';
+  specialties: string[];
+  description: string;
+  website?: string;
+  phone: string;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    country: string;
+  };
+  location: {
+    type: 'Point';
+    coordinates: [number, number];
+  };
+  verificationStatus: 'PENDING' | 'VERIFIED' | 'REJECTED';
+  verificationDocuments: {
+    type: string;
+    url: string;
+    uploadedAt: Date;
+  }[];
+  operatingHours: {
+    [key: string]: { open: string; close: string };
+  };
+  amenities: string[];
+  parkingAvailable: boolean;
+  accessibilityInfo?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### 2. Application Schemas
+
+#### Application Model ([Application.ts](mdc:src/models/Application.ts))
+```typescript
+interface Application {
+  _id: ObjectId;
+  student: ObjectId;
+  opportunity: ObjectId;
+  status: 'pending' | 'reviewing' | 'accepted' | 'rejected' | 'onboarding';
+  coverLetter?: string;
+  resume?: string;
+  notes?: string;
+  nextSteps?: {
+    type: 'document' | 'form' | 'task' | 'meeting';
+    title: string;
+    description: string;
+    deadline?: string;
+    completed?: boolean;
+  }[];
+  notifications?: {
+    _id: string;
+    message: string;
+    date: string;
+    read: boolean;
+    type: 'info' | 'success' | 'warning' | 'error';
+  }[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### 3. Opportunity Schema ([Opportunity.ts](mdc:src/models/Opportunity.ts))
+```typescript
+interface Opportunity {
+  _id: ObjectId;
+  title: string;
+  description: string;
+  type: 'shadowing' | 'rotation' | 'volunteering' | 'internship';
+  specialty: string;
+  duration: string;
+  schedule: string;
+  requirements: string[];
+  isPaid: boolean;
+  location: {
+    address: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
+  facility: ObjectId;
+  status: 'active' | 'closed' | 'draft';
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Extended interface for dashboard display
+interface OpportunityDisplay extends Opportunity {
+  facility: string | { name: string; location?: string; contact?: string };
+  facilityLogo?: string;
+  image?: string;
+  savedAt?: string;
+  benefits?: string[];
+  isNew?: boolean;
+  isFeatured?: boolean;
+  isPopular?: boolean;
+  deadlineSoon?: boolean;
+  postedAt?: string;
+}
+```
+
+### 4. Hour Log Schema ([HourLog.ts](mdc:src/models/HourLog.ts))
+```typescript
+interface HourLog {
+  _id: ObjectId;
+  studentId: ObjectId;
+  facilityId: ObjectId;
+  opportunityId: ObjectId;
+  supervisorId: ObjectId;
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+  totalHours: number;
+  specialty: string;
+  activities: string[];
+  notes?: string;
+  verificationStatus: 'PENDING' | 'VERIFIED' | 'REJECTED';
+  verifiedBy?: ObjectId;
+  verifiedAt?: Date;
+  verificationNotes?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+```
+
+### 5. Deadline Schema
+```typescript
+interface Deadline {
+  _id: ObjectId;
+  title: string;
+  start: Date;
+  end: Date;
+  type: 'application' | 'interview' | 'start_date' | 'school_deadline' | 'other';
+  description?: string;
+  location?: string;
+  color?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Zod validation schema
+const deadlineSchema = z.object({
+  title: z.string().min(1),
+  start: z.string().datetime(),
+  end: z.string().datetime(),
+  type: z.enum(['application', 'interview', 'start_date', 'school_deadline', 'other']),
+  description: z.string().optional(),
+  location: z.string().optional(),
+  color: z.string().optional(),
+});
+```
+
+## Refactoring Plan
+
+### Phase 1: Create Shared Types
+1. Create new type definition files:
+   ```
+   src/types/
+   ├── location.ts
+   ├── profile.ts
+   ├── application.ts
+   ├── opportunity.ts
+   ├── hour-log.ts
+   └── deadline.ts
+   ```
+
+2. Define shared interfaces:
+   ```typescript
+   // location.ts
+   interface Location {
+     address: string;
+     city: string;
+     state: string;
+     zipCode: string;
+     coordinates: {
+       lat: number;
+       lng: number;
+     };
+   }
+
+   // profile.ts
+   interface BaseProfile {
+     userId: string;
+     skills: string[];
+     interests: string[];
+     bio?: string;
+     createdAt: Date;
+     updatedAt: Date;
+   }
+
+   interface StudentProfile extends BaseProfile {
+     // Student-specific fields
+   }
+
+   interface FacilityProfile extends BaseProfile {
+     // Facility-specific fields
+   }
+   ```
+
+### Phase 2: Model Refactoring
+1. Update Mongoose models to use shared types
+2. Implement proper inheritance
+3. Add validation and middleware
+4. Update indexes
+
+### Phase 3: Component Updates
+1. Update all components to use new type definitions
+2. Remove duplicate interface definitions
+3. Ensure type safety
+
+### Phase 4: Database Migration
+1. Create migration scripts
+2. Update existing data
+3. Ensure backward compatibility
+
+## Implementation Steps
+
+### Step 1: Create Shared Types
+1. Create new type definition files
+2. Move shared interfaces
+3. Update imports
+
+### Step 2: Update Models
+1. Refactor User model
+2. Update StudentProfile model
+3. Update FacilityProfile model
+4. Update Application model
+5. Update Opportunity model
+6. Update HourLog model
+7. Create Deadline model
+
+### Step 3: Update Components
+1. Update application components
+2. Update dashboard components
+3. Update profile components
+
+### Step 4: Database Migration
+1. Create migration scripts
+2. Test migrations
+3. Deploy changes
+
+## Testing Strategy
+
+### Unit Tests
+1. Test new type definitions
+2. Test model changes
+3. Test component updates
+
+### Integration Tests
+1. Test database migrations
+2. Test API endpoints
+3. Test component interactions
+
+### End-to-End Tests
+1. Test user flows
+2. Test profile management
+3. Test application process
+
+## Rollback Plan
+
+### Preparation
+1. Backup database
+2. Document current schema
+3. Create rollback scripts
+
+### Execution
+1. Monitor deployment
+2. Watch for errors
+3. Have rollback ready
+
+## Success Criteria
+1. All duplicate schemas removed
+2. Type safety maintained
+3. No functionality lost
+4. Performance maintained or improved
+5. All tests passing
+
+## Timeline
+1. Phase 1: 1-2 days
+2. Phase 2: 2-3 days
+3. Phase 3: 2-3 days
+4. Phase 4: 1-2 days
+
+Total estimated time: 6-10 days

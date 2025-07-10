@@ -1,58 +1,12 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { Application, applicationSchema } from '../types/application';
 
-export interface IApplication extends Document {
-  student: mongoose.Types.ObjectId;
-  opportunity: mongoose.Types.ObjectId;
-  status: 'pending' | 'accepted' | 'rejected';
-  coverLetter?: string;
-  resume?: string;
-  notes?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+// Create schema with indexes
+const schema = new Schema<Application>(applicationSchema);
+schema.index({ student: 1 });
+schema.index({ opportunity: 1 });
+schema.index({ status: 1 });
+schema.index({ createdAt: 1 });
 
-const applicationSchema = new Schema<IApplication>({
-  student: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  opportunity: {
-    type: Schema.Types.ObjectId,
-    ref: 'Opportunity',
-    required: true
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'accepted', 'rejected'],
-    default: 'pending'
-  },
-  coverLetter: {
-    type: String,
-    required: false
-  },
-  resume: {
-    type: String,
-    required: false
-  },
-  notes: {
-    type: String,
-    required: false
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-// Update the updatedAt timestamp before saving
-applicationSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
-  next();
-});
-
-export const Application = mongoose.models.Application || mongoose.model<IApplication>('Application', applicationSchema); 
+// Create model
+export const ApplicationModel = mongoose.model<Application>('Application', schema); 
